@@ -1,0 +1,25 @@
+# Environment variables (sensitive info - NEVER commit)
+.env
+*.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+*.lnk
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log

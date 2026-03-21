@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支出編集 - TripSplit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .back-link {
+            color: #4dd0e1;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid #4dd0e1;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .back-link:hover {
+            background: #4dd0e1;
+            color: #0f2027;
+        }
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .event-badge {
+            display: inline-block;
+            background: rgba(77, 208, 225, 0.15);
+            color: #4dd0e1;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        .error-msg {
+            background: rgba(244, 67, 54, 0.15);
+            border-left: 4px solid #f44336;
+            color: #ff8a80;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        .card-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #4dd0e1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #b0bec5;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            font-family: 'Noto Sans JP', sans-serif;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4dd0e1;
+            box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.15);
+        }
+        select option {
+            background: #1a3a4a;
+            color: #fff;
+        }
+        .radio-group {
+            display: flex;
+            gap: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .radio-group label {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #b0bec5;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.2s;
+            margin-bottom: 0;
+        }
+        .radio-group input[type="radio"] {
+            display: none;
+        }
+        .radio-group label:has(input:checked) {
+            background: #4dd0e1;
+            color: #0f2027;
+        }
+        .checkbox-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .checkbox-item:hover {
+            border-color: #4dd0e1;
+            background: rgba(77, 208, 225, 0.08);
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4dd0e1;
+        }
+        .checkbox-item span {
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+        #units_section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .unit-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .unit-row label {
+            flex: 1;
+            font-size: 14px;
+            color: #e0e0e0;
+            margin-bottom: 0;
+        }
+        .unit-row input {
+            width: 80px;
+            text-align: center;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+        }
+        .submit-btn {
+            flex: 1;
+            padding: 16px;
+            background: linear-gradient(135deg, #4dd0e1, #26a69a);
+            color: #0f2027;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Noto Sans JP', sans-serif;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            letter-spacing: 1px;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(77, 208, 225, 0.3);
+        }
+        .delete-btn {
+            padding: 16px 24px;
+            background: rgba(244, 67, 54, 0.15);
+            color: #ff8a80;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Noto Sans JP', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .delete-btn:hover {
+            background: rgba(244, 67, 54, 0.3);
+        }
+        .powered-by {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.25);
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="header">
+            <a href="/events/{{ events.event_id }}" class="back-link">← 戻る</a>
+            <div>
+                <h1>支出編集</h1>
+                <span class="event-badge">{{ events.event_name }}</span>
+            </div>
+        </div>
+
+        {% if error %}
+            <div class="error-msg">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="/events/{{ events.event_id }}/expenses/{{ expenses.expense_id }}/edit">
+
+            <!-- 基本情報 -->
+            <div class="card">
+                <div class="card-title">基本情報</div>
+
+                <div class="form-group">
+                    <label>カテゴリ名</label>
+                    <input type="text" name="category_name"
+                           value="{{ categories.category_name if categories else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>金額</label>
+                    <input type="number" name="expense_amount" step="0.01" min="0"
+                           value="{{ expenses.expense_amount }}">
+                </div>
+
+                <div class="form-group">
+                    <label>日付</label>
+                    <input type="date" name="expense_at"
+                           value="{{ expenses.expense_at.strftime('%Y-%m-%d') if expenses.expense_at else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>メモ（任意）</label>
+                    <input type="text" name="description"
+                           value="{{ expenses.description if expenses.description else '' }}">
+                </div>
+            </div>
+
+            <!-- 立替者 -->
+            <div class="card">
+                <div class="card-title">誰が払った？</div>
+                <div class="form-group">
+                    <label>立替者</label>
+                    <select name="payer_ep_id">
+                        {% for p in participants %}
+                            <option value="{{ p.event_participant_id }}"
+                                {% if p.event_participant_id == expenses.payer_ep_id %}selected{% endif %}>
+                                {{ p.display_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- 割り勘方式 -->
+            <div class="card">
+                <div class="card-title">割り勘方式</div>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="split_method" value="EQUAL" checked>
+                            <span>均等割り</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="split_method" value="UNITS">
+                            <span>口数割り</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 負担者選択 -->
+            <div class="card">
+                <div class="card-title">誰が負担する？</div>
+                <div class="checkbox-grid">
+                    {% for p in participants %}
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="participants[]"
+                                   value="{{ p.event_participant_id }}"
+                                   {% for a in allocations %}
+                                       {% if a.event_participant_id == p.event_participant_id %}checked{% endif %}
+                                   {% endfor %}>
+                            <span>{{ p.display_name }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+
+                <!-- 口数割りセクション -->
+                <div id="units_section" style="display: none;">
+                    <div class="form-group">
+                        <label>1口の単価</label>
+                        <input type="number" name="unit_price" step="0.01" min="0" placeholder="0">
+                    </div>
+                    <div>
+                        <label style="font-size:13px; color:#b0bec5; margin-bottom:10px; display:block;">各参加者の口数</label>
+                        {% for p in participants %}
+                            <div class="unit-row">
+                                <label>{{ p.display_name }}</label>
+                                <input type="number" name="units_{{ p.event_participant_id }}"
+                                       min="0"
+                                       value="{% for a in allocations %}{% if a.event_participant_id == p.event_participant_id %}{{ a.weight }}{% endif %}{% endfor %}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button type="submit" class="submit-btn">変更を保存する</button>
+            </div>
+
+        </form>
+
+        <!-- 削除ボタン（別フォーム） -->
+        <form method="POST" action="/events/{{ events.event_id }}/expenses/{{ expenses.expense_id }}/delete"
+              onsubmit="return confirm('この支出を削除しますか？');"
+              style="margin-top: 12px;">
+            <button type="submit" class="delete-btn" style="width: 100%;">この支出を削除する</button>
+        </form>
+
+        <div class="powered-by">TRIPSPLIT</div>
+
+    </div>
+
+    <script>
+        document.querySelectorAll('input[name="split_method"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                var section = document.getElementById('units_section');
+                if (this.value === 'UNITS') {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

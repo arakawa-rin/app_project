@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>イベント一覧</title>
+</head>
+<body>
+  <h1>イベント一覧</h1>
+
+  {% set events = created_events + joined_events %}
+  {% if events %}
+  <ul>
+    {% for event in events %}
+     <h2>{{ event.event_name }}</h2>
+     <li>開始日：{{ event.start_date }}</li>
+     <li>終了日：{{ event.end_date }}</li>
+     <a href="{{ url_for('details',event_id=event.event_id) }}">詳細</a>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <h1>まだイベントがありません</h1>
+  {% endif %}
+</body>
+</html>
