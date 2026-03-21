@@ -12,14 +12,7 @@ app = Flask(__name__)
 
 db = SQLAlchemy()
 
-DB_INFO = {
-    'user': os.getenv("user"),
-    'password': os.getenv("password"),
-    'host': os.getenv("host"),
-    'database': os.getenv("database"),
-}
-
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://{user}:{password}@{host}/{database}".format(**DB_INFO)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
@@ -34,7 +27,7 @@ class Users(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     created_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
-    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
     deleted_at = db.Column(db.TIMESTAMP, nullable=True)
     user_name = db.Column(db.String(50), nullable=True)
     is_active = db.Column(db.Boolean, nullable=False, server_default=db.text("1"))
@@ -44,7 +37,7 @@ class Events(db.Model):
     event_id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     event_name = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
-    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
     deleted_at = db.Column(db.TIMESTAMP, nullable=True)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
@@ -59,10 +52,10 @@ class Event_Participants(db.Model):
     event_id = db.Column(db.BigInteger, db.ForeignKey('events.event_id'), nullable=False)
     user_id = db.Column(db.BigInteger, db.ForeignKey('users.user_id'), nullable=True)
     created_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
-    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
     deleted_at = db.Column(db.TIMESTAMP, nullable=True)
     display_name = db.Column(db.String(50), nullable=False)
-    status = db.Column(db.Enum('invited', 'joined', 'left'), nullable=False, server_default='invited')
+    status = db.Column(db.String(10), nullable=False, server_default='invited')
     joined_at = db.Column(db.DateTime, nullable=True)
     left_at = db.Column(db.DateTime, nullable=True)
   
@@ -72,7 +65,7 @@ class Expense_Categories(db.Model):
     event_id = db.Column(db.BigInteger, db.ForeignKey('events.event_id'), nullable=False)
     category_name = db.Column(db.String(100), nullable=False,)
     created_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
-    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
     deleted_at = db.Column(db.TIMESTAMP, nullable=True)
 
 class Expenses(db.Model):
@@ -85,8 +78,8 @@ class Expenses(db.Model):
     description = db.Column(db.String(300), nullable=True)
     expense_at = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
-    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
-    deleted_at = db.Column(db.TIMESTAMP, nullable=True) 
+    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
+    deleted_at = db.Column(db.TIMESTAMP, nullable=True)
 
 class Allocations(db.Model):  
     __tablename__= 'allocations'
@@ -96,7 +89,7 @@ class Allocations(db.Model):
     weight = db.Column(db.Integer,nullable=False,default=1)
     allocation_amount = db.Column(db.Numeric(12,2),nullable=False)
     created_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
-    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
     deleted_at = db.Column(db.TIMESTAMP, nullable=True)
 
 class Settlements(db.Model):
@@ -110,11 +103,11 @@ class Settlements(db.Model):
     payer_ep_id = db.Column(db.BigInteger, db.ForeignKey('event_participants.event_participant_id'), nullable=False)
     payee_ep_id = db.Column(db.BigInteger, db.ForeignKey('event_participants.event_participant_id'), nullable=False)
     total_amount = db.Column(db.Numeric(12,2),nullable=False)
-    status = db.Column(db.Enum('paid', 'unpaid', 'canceled'), nullable=False, server_default='unpaid')
+    status = db.Column(db.String(10), nullable=False, server_default='unpaid')
     description = db.Column(db.String(300), nullable=True)
     settled_at = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
-    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
+    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
     deleted_at = db.Column(db.TIMESTAMP, nullable=True)
 
 
