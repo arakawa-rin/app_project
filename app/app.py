@@ -12,17 +12,22 @@ load_dotenv()
 
 app = Flask(__name__)
 
+def normalize_database_url(raw_uri):
+    if not raw_uri:
+        raise RuntimeError("DATABASE_URL or URI is not set.")
+    if raw_uri.startswith("postgres://"):
+        return raw_uri.replace("postgres://", "postgresql://", 1)
+    return raw_uri
 
-uri = os.getenv("URI") or os.getenv("DATABASE_URL")
-print(f"DEBUG: URI = {uri}")
+
+uri = normalize_database_url(os.getenv("URI") or os.getenv("DATABASE_URL"))
 app.config["SQLALCHEMY_DATABASE_URI"] = uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
-
 db.init_app(app)
 
-app.secret_key = os.getenv("app_password")
+app.secret_key = os.getenv("app_password") or os.getenv("SECRET_KEY") or "dev-secret-key"
 
 app.permanent_session_lifetime = timedelta(days=365)
 
