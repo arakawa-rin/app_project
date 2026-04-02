@@ -13,8 +13,12 @@ load_dotenv()
 app = Flask(__name__)
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("URI")
+uri = os.getenv("URI") or os.getenv("DATABASE_URL")
+print(f"DEBUG: URI = {uri}")
+app.config["SQLALCHEMY_DATABASE_URI"] = uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+
 
 db.init_app(app)
 
