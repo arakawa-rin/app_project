@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ポートフォリオ - 割り勘管理アプリ</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page { size: A4 portrait; margin: 8mm; }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background: #fff;
+      color: #222;
+      font-size: 10px;
+      line-height: 1.35;
+    }
+    .page { max-width: 740px; margin: 0 auto; padding: 10px 14px; }
+
+    .header { border-bottom: 2px solid #2563eb; padding-bottom: 5px; margin-bottom: 8px; }
+    .header-label { font-size: 7.5px; letter-spacing: .1em; color: #2563eb; font-weight: 700; text-transform: uppercase; }
+    .header h1 { font-size: 18px; font-weight: 700; color: #111; margin: 1px 0; }
+    .header .subtitle { font-size: 9.5px; color: #555; }
+    .header-meta { font-size: 8px; color: #888; margin-top: 2px; }
+
+    .section { margin-bottom: 8px; }
+    .section-title {
+      font-size: 8px; font-weight: 700; color: #2563eb; letter-spacing: .08em;
+      text-transform: uppercase; border-left: 3px solid #2563eb;
+      padding-left: 5px; margin-bottom: 4px;
+    }
+
+    .overview-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
+    .overview-card { border: 1px solid #e2e8f0; border-radius: 4px; padding: 5px 7px; background: #f8fafc; }
+    .overview-card .card-label { font-size: 7.5px; font-weight: 700; color: #64748b; margin-bottom: 2px; }
+    .overview-card p { font-size: 9px; color: #334155; line-height: 1.35; }
+
+    .note-box {
+      border: 1px solid #e2e8f0; border-left: 3px solid #2563eb; border-radius: 3px;
+      padding: 5px 8px; background: #f8fafc; font-size: 9px; color: #334155; line-height: 1.4;
+    }
+    .note-box p + p { margin-top: 2px; }
+
+    .tech-table { width: 100%; border-collapse: collapse; font-size: 9px; }
+    .tech-table th {
+      background: #f1f5f9; text-align: left; padding: 3px 7px;
+      font-weight: 600; color: #475569; border: 1px solid #e2e8f0; width: 20%;
+    }
+    .tech-table td { padding: 3px 7px; border: 1px solid #e2e8f0; color: #334155; }
+    .tag {
+      display: inline-block; background: #dbeafe; color: #1d4ed8;
+      border-radius: 3px; padding: 1px 5px; font-size: 8px; font-weight: 600; margin: 1px 1px 1px 0;
+    }
+
+    .arch-diagram { border: 1px solid #e2e8f0; border-radius: 5px; padding: 6px 10px; background: #f8fafc; }
+    .arch-row { display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+    .arch-box {
+      border: 1px solid #94a3b8; border-radius: 4px; padding: 4px 10px;
+      text-align: center; background: #fff; min-width: 80px;
+    }
+    .arch-box .box-label { font-size: 7px; font-weight: 700; color: #64748b; }
+    .arch-box .box-name  { font-size: 9px; font-weight: 600; color: #1e293b; }
+    .arch-box.blue   { border-color: #2563eb; background: #eff6ff; }
+    .arch-box.green  { border-color: #16a34a; background: #f0fdf4; }
+    .arch-box.gray   { border-color: #64748b; background: #f1f5f9; }
+    .arch-box.orange { border-color: #d97706; background: #fffbeb; }
+    .arch-arrow { font-size: 12px; color: #94a3b8; padding: 0 5px; line-height: 1; }
+    .arch-note { text-align: center; font-size: 7.5px; color: #94a3b8; margin-top: 4px; }
+
+    .progress-table { width: 100%; border-collapse: collapse; font-size: 9px; }
+    .progress-table th {
+      background: #f1f5f9; text-align: left; padding: 3px 7px;
+      font-weight: 600; color: #475569; border: 1px solid #e2e8f0;
+    }
+    .progress-table td { padding: 3px 7px; border: 1px solid #e2e8f0; color: #334155; vertical-align: top; }
+    .badge {
+      display: inline-block; border-radius: 3px; padding: 1px 6px;
+      font-size: 7.5px; font-weight: 700; white-space: nowrap;
+    }
+    .badge-done { background: #dcfce7; color: #15803d; }
+    .badge-wip  { background: #fef9c3; color: #854d0e; }
+    .badge-todo { background: #f1f5f9; color: #64748b; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-label">Portfolio — Page 1 / アプリ概要・構成・進捗</div>
+    <h1>割り勘管理アプリ</h1>
+    <div class="subtitle">グループ旅行・イベントの立替・精算を効率化する Web アプリケーション</div>
+    <div class="header-meta">開発状況：バックエンド実装中（APIルート整備フェーズ）　／　2026年3月時点</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">アプリ概要</div>
+    <div class="overview-grid">
+      <div class="overview-card">
+        <div class="card-label">目的</div>
+        <p>グループ内の立替・割り勘を記録し、誰が誰にいくら払えばよいかを自動計算して精算をシンプルにする。</p>
+      </div>
+      <div class="overview-card">
+        <div class="card-label">解決したい課題</div>
+        <p>旅行や飲み会後に「誰がいくら出したか」を集計する手間を省き、手計算ミスや後払いトラブルをなくす。</p>
+      </div>
+      <div class="overview-card">
+        <div class="card-label">想定利用シーン</div>
+        <p>友人グループの旅行・合宿・飲み会など、複数人で費用をシェアするあらゆる場面。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">工夫した点</div>
+    <div class="note-box">
+      <p><strong>傾斜割り勘機能（口数割）の実装</strong>　均等割りに加え、参加者ごとに「口数」を設定して負担額に傾斜をつける割り勘方式を実装。例：「Aさん：2口、Bさん：1口」のように配分を変えられる。合計口数 × 1口単価が支出金額と一致するかのバリデーションも実装し、入力ミスを防ぐ設計にしている。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">使用技術</div>
+    <table class="tech-table">
+      <tr>
+        <th>バックエンド</th>
+        <td><span class="tag">Python</span><span class="tag">Flask</span><span class="tag">Flask-SQLAlchemy</span><span class="tag">gunicorn</span></td>
+      </tr>
+      <tr>
+        <th>フロントエンド</th>
+        <td><span class="tag">HTML / CSS</span><span class="tag">Jinja2</span><span style="font-size:8px;color:#64748b;">（React等への移行を検討中）</span></td>
+      </tr>
+      <tr>
+        <th>データベース</th>
+        <td><span class="tag">PostgreSQL</span><span class="tag">psycopg2-binary</span></td>
+      </tr>
+      <tr>
+        <th>デプロイ環境</th>
+        <td><span class="tag">Render</span><span style="font-size:8px;color:#64748b;">（Web Service + PostgreSQL）</span></td>
+      </tr>
+      <tr>
+        <th>その他</th>
+        <td><span class="tag">python-dotenv</span><span class="tag">Git / GitHub</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">システム構成</div>
+    <div class="arch-diagram">
+      <div class="arch-row">
+        <div class="arch-box blue"><div class="box-label">ユーザー</div><div class="box-name">ブラウザ</div></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box green"><div class="box-label">フロントエンド</div><div class="box-name">HTML / Jinja2</div></div>
+        <div class="arch-arrow">↕</div>
+        <div class="arch-box green"><div class="box-label">バックエンド</div><div class="box-name">Flask (Python)</div></div>
+        <div class="arch-arrow">↕</div>
+        <div class="arch-box orange"><div class="box-label">データベース</div><div class="box-name">PostgreSQL</div></div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box gray"><div class="box-label">デプロイ</div><div class="box-name">Render</div></div>
+      </div>
+      <div class="arch-note">Flask が HTML テンプレートのレンダリングと API ルートの両方を担う構成。将来的にフロントを分離予定。</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">開発進捗</div>
+    <table class="progress-table">
+      <thead>
+        <tr><th style="width:22%;">機能</th><th style="width:14%;">状態</th><th>内容・備考</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>DB設計・モデル定義</td><td><span class="badge badge-done">完成</span></td><td>7テーブル（Users / Events / Event_Participants / Expenses / Allocations / Settlements / Expense_Categories）を設計・実装済み</td></tr>
+        <tr><td>イベント作成・管理</td><td><span class="badge badge-done">完成</span></td><td>イベント作成・編集・削除、招待コード生成、参加者追加を実装済み</td></tr>
+        <tr><td>支出記録・割り勘計算</td><td><span class="badge badge-done">完成</span></td><td>均等割（EQUAL）・口数割（UNITS）の2方式で自動計算。端数処理も実装済み</td></tr>
+        <tr><td>精算計算</td><td><span class="badge badge-done">完成</span></td><td>参加者間の立替合計から誰が誰にいくら払うかを算出するロジックを実装済み</td></tr>
+        <tr><td>テンプレート画面（HTML）</td><td><span class="badge badge-done">完成</span></td><td>Jinja2 ベースのテンプレートで一通りの画面を実装済み</td></tr>
+        <tr><td>APIルート整備</td><td><span class="badge badge-wip">開発中</span></td><td>フロントエンド分離を見据えた REST API を実装中。主要ルートを順次対応中</td></tr>
+        <tr><td>フロントエンド刷新</td><td><span class="badge badge-todo">未着手</span></td><td>API 整備完了後に React 等への移行を検討</td></tr>
+        <tr><td>テスト・バリデーション強化</td><td><span class="badge badge-todo">未着手</span></td><td>ユニットテスト・入力バリデーションの体系的な整備は今後行う</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">補足</div>
+    <div class="note-box">
+      <p>バックエンド（Flask・DB設計・割り勘ロジック・API設計）はすべて自分で実装。フロントは Jinja2 テンプレートで動作中、API 整備後に刷新予定。コア機能（支出記録・割り勘計算・精算計算）は動作する状態。「フロント分離を想定した API 構成」を意識して実装を進めている。</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

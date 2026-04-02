@@ -1,70 +1,46 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
-from dotenv import load_dotenv
-from sqlalchemy import func,text,Numeric
-from datetime import datetime, date, timedelta
-from decimal import Decimal, InvalidOperation,ROUND_DOWN
-import os,random, string
+from flask import Blueprint, request, jsonify, session
+from sqlalchemy import func
+from datetime import datetime, timedelta
+from decimal import Decimal, InvalidOperation, ROUND_DOWN
+import random, string
 from models import db
 from models.models import Users, Events, Event_Participants, Expense_Categories, Expenses, Allocations, Settlements
 
-
-load_dotenv()
-
-app = Flask(__name__)
-
-
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("URI")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-db.init_app(app)
-
-app.secret_key = os.getenv("app_password")
-
-app.permanent_session_lifetime = timedelta(days=365)
-
-
-from app.api_route import api
-
-app.register_blueprint(api)
+api = Blueprint('api', __name__)
 
 
 
 
-
-#トップページ
-@app.route('/', methods=['GET', 'POST'])
-def index():
+#APIイベント一覧・作成ルート
+@api.route('/api/events', methods=['GET', 'POST'])
+def api_events():
     if request.method == 'POST':
-        event_name = request.form.get('event_name')
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
-        display_name = request.form.get('display_name')
-
+        data = request.get_json()
+        event_name = data.get('event_name')
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+        display_name = data.get('display_name')
 
         # 入力チェック
         if not event_name or not start_date or not end_date or not display_name:
-            return render_template('index.html', error="入力してください")
-
+            return jsonify({"success": False, "error": "入力してください"}), 400
         try:
             start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
             end_date   = datetime.strptime(end_date,   '%Y-%m-%d').date()
         except ValueError:
-            return render_template('index.html', error="日付が不正です")
+            return jsonify({"success": False, "error": "日付が不正です"}), 400
 
         # 日付チェック
         if start_date > end_date:
-            return render_template('index.html', error="日付が不正です")
-
-
+            return jsonify({"success": False, "error": "日付が不正です"}), 400
 
         #ゲストユーザーを作成してuser_idを自動採番
         user1 = session.get("user_id")
         if user1 is None:
             user1 = guest_create()
-        
+
         #イベントテーブルにデータ挿入
         events = Events(event_name=event_name, start_date=start_date, end_date=end_date, created_by=user1)
-        
         db.session.add(events)
         db.session.flush()
 
@@ -72,7 +48,7 @@ def index():
         event_participants = Event_Participants(event_id=events.event_id, user_id=user1, display_name=display_name, status='joined')
         db.session.add(event_participants)
 
-        member_names = request.form.getlist('member_names[]')
+        member_names = data.get('member_names', [])
         for name in member_names:
             name = name.strip()
             if name:
@@ -86,147 +62,128 @@ def index():
                 break
 
         db.session.commit()
-        
-        return redirect(url_for('event_list'))
 
-    # GETリクエスト時
-    else:
-        return render_template('index.html')
+        return jsonify({"success": True, "event_id": events.event_id})
 
-#イベント一覧ページ   
-@app.route('/event_list',methods=['GET', 'POST'])
-def event_list():
-    if request.method == "GET":
+    else:  # GET
         user_id = session.get("user_id")
         if user_id is None:
-           return redirect(url_for("index"))
-    
+            return jsonify({"success": False, "error": "Unauthorized"}), 401
+
         created_events = (db.session.query(Events).filter(Events.created_by == user_id, Events.deleted_at.is_(None)).order_by(Events.created_at.desc()).all())
         joined_events = (db.session.query(Events).join(Event_Participants, Events.event_id == Event_Participants.event_id)
                         .filter(Event_Participants.user_id == user_id, Events.created_by != user_id, Events.deleted_at.is_(None), Event_Participants.deleted_at.is_(None))
                         .order_by(Events.created_at.desc()).all())
 
-        return render_template("event_list.html", created_events=created_events, joined_events=joined_events)
-    
-    
-    else:
-        return render_template('index.html')
-
-#イベント詳細ページ
-@app.route('/events/<int:event_id>',methods=['GET'])
-def details(event_id):
-    if not check_participant(event_id):
-        return redirect(url_for('event_list'))
-    if request.method =="GET":
-       events = Events.query.get_or_404(event_id)
-       if events.deleted_at is not None:
-           return redirect(url_for('event_list'))
-       participants = Event_Participants.query.filter_by(event_id=event_id).filter(Event_Participants.deleted_at.is_(None)).all()
-       
-       # 支出一覧を取得（カテゴリ名と立替者名も一緒に）
-       expenses_raw = (db.session.query(
-           Expenses.expense_id,
-           Expenses.expense_amount,
-           Expenses.expense_at,
-           Expense_Categories.category_name,
-           Event_Participants.display_name.label('payer_name')
-       )
-       .outerjoin(Expense_Categories, Expenses.category_id == Expense_Categories.category_id)
-       .join(Event_Participants, Expenses.payer_ep_id == Event_Participants.event_participant_id)
-       .filter(Expenses.event_id == event_id, Expenses.deleted_at.is_(None))
-       .order_by(Expenses.expense_at.desc())
-       .all())
-
-       return render_template('event_details.html', events=events, participants=participants, expenses=expenses_raw)
-
-@app.route('/events/<int:event_id>/edit',methods=['GET','POST'])
-def edit(event_id):
+        return jsonify({"success": True, "created_events": [e.to_dict() for e in created_events], "joined_events": [e.to_dict() for e in joined_events]})
+#APIイベント詳細・編集・削除ルート
+@api.route('/api/events/<int:event_id>', methods=['GET', 'PUT', 'DELETE'])
+def api_event_detail(event_id):
     events = Events.query.get_or_404(event_id)
-    if not check_creater(events):
-        return redirect(url_for('details', event_id=event_id))
-    if request.method == "GET":
-        return render_template('event_edit.html',events=events)
 
-    else:
-        event_name = request.form.get('event_name')
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
+    if request.method == 'GET':
+        if not check_participant(event_id):
+            return jsonify({"success": False, "error": "Unauthorized"}), 401
+        if events.deleted_at is not None:
+            return jsonify({"success": False, "error": "Event not found"}), 404
+        participants = Event_Participants.query.filter_by(event_id=event_id).filter(Event_Participants.deleted_at.is_(None)).all()
 
-        # 入力チェック
+        # 支出一覧を取得（カテゴリ名と立替者名も一緒に）
+        expenses_raw = (db.session.query(
+            Expenses.expense_id,
+            Expenses.expense_amount,
+            Expenses.expense_at,
+            Expense_Categories.category_name,
+            Event_Participants.display_name.label('payer_name'))
+        .outerjoin(Expense_Categories, Expenses.category_id == Expense_Categories.category_id)
+        .join(Event_Participants, Expenses.payer_ep_id == Event_Participants.event_participant_id)
+        .filter(Expenses.event_id == event_id, Expenses.deleted_at.is_(None))
+        .order_by(Expenses.expense_at.desc())
+        .all())
+
+        expenses_raw_dict = [{
+            "expense_id": e.expense_id,
+            "expense_amount": str(e.expense_amount),
+            "expense_at": str(e.expense_at),
+            "category_name": e.category_name,
+            "payer_name": e.payer_name
+        } for e in expenses_raw]
+
+        return jsonify({"success": True, "event": events.to_dict(), "participants": [p.to_dict() for p in participants], "expenses": expenses_raw_dict})
+
+    elif request.method == 'PUT':
+        if not check_creater(events):
+            return jsonify({"success": False, "error": "Unauthorized"}), 401
+        data = request.get_json()
+        event_name = data.get('event_name')
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+
         if not event_name or not start_date or not end_date:
-            return render_template('event_edit.html', error="入力してください",events=events)
-        
+            return jsonify({"success": False, "error": "入力してください"}), 400
         try:
             start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
             end_date   = datetime.strptime(end_date,   '%Y-%m-%d').date()
         except ValueError:
-            return render_template('event_edit.html', error="日付が不正です", events=events)
-
-        # 日付チェック
+            return jsonify({"success": False, "error": "不正な値です"}), 400
         if start_date > end_date:
-            return render_template('event_edit.html', error="日付が不正です",events=events)
-        
+            return jsonify({"success": False, "error": "日付が不正です"}), 400
 
         events.event_name = event_name
         events.start_date = start_date
         events.end_date = end_date
-
         db.session.commit()
+        return jsonify({"success": True, "event": events.to_dict()})
 
-        return redirect(url_for('details', event_id=event_id))
-    
-@app.route('/events/<int:event_id>/delete', methods=['POST'])
-def delete_event(event_id):
-    event = Events.query.get_or_404(event_id)
-    if not check_creater(event):
-        return redirect(url_for('details', event_id=event_id))
-    event.deleted_at = datetime.now()
-    db.session.commit()
-    return redirect(url_for('event_list'))
+    else:  # DELETE
+        if not check_creater(events):
+            return jsonify({"success": False, "error": "Unauthorized"}), 401
+        events.deleted_at = datetime.now()
+        db.session.commit()
+        return jsonify({"success": True})
 
-        
-    
-
-@app.route('/events/<int:event_id>/add_expense',methods=['GET', 'POST'])
-def add_expense(event_id):
+#API支出追加ルート
+@api.route('/api/events/<int:event_id>/expenses',methods=['GET', 'POST'])
+def api_add_expense(event_id):
     if not check_participant(event_id):
-        return redirect(url_for('event_list'))
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
     if request.method =="POST":
         event = Events.query.get_or_404(event_id)
         participants = Event_Participants.query.filter_by(event_id=event_id).all()
 
-        category_name = request.form.get('category_name')
-        expense_amount = request.form.get('expense_amount')
-        payer_ep_id = request.form.get('payer_ep_id')
-        participants_ids = request.form.getlist('participants[]')
-        expense_at = request.form.get('expense_at')
-        description = request.form.get('description')
-        split_method = request.form.get('split_method')
+        data = request.get_json()
+        category_name = data.get('category_name')
+        expense_amount = data.get('expense_amount')
+        payer_ep_id = data.get('payer_ep_id')
+        participants_ids = data.get('participants')
+        expense_at = data.get('expense_at')
+        description = data.get('description')
+        split_method = data.get('split_method')
 
 
         if not category_name or not expense_amount or not payer_ep_id or not participants_ids or not expense_at:
-            return render_template('add_expense.html', error="入力してください", event_id=event_id,participants=participants,event=event,participant_ids=participants_ids)
+            return jsonify({"success": False, "error": "入力してください"}), 400
         
         category_name = category_name.strip()
 
         try:
             expense_at = datetime.strptime(expense_at, '%Y-%m-%d').date()
         except ValueError:
-            return render_template('add_expense.html', error="日付が不正です", event_id=event_id,participants=participants,event=event,participant_ids=participants_ids)
+            return jsonify({"success": False, "error": "日付が不正です"}), 400
 
         try:
             expense_amount = Decimal(expense_amount)
         except InvalidOperation:
-            return render_template('add_expense.html', error="金額が不正です", event_id=event_id,participants=participants,event=event,participant_ids=participants_ids)
+            return jsonify({"success": False, "error": "金額が不正です"}), 400
         
         if expense_amount <= 0:
-            return render_template('add_expense.html', error="金額が不正です", event_id=event_id,participants=participants,event=event,participant_ids=participants_ids)
+            return jsonify({"success": False, "error": "金額が不正です"}), 400
 
         if event.start_date > expense_at or expense_at > event.end_date:
-            return render_template('add_expense.html', error="日付が不正です", event_id=event_id,participants=participants,event=event,participant_ids=participants_ids)
-        
+            return jsonify({"success": False, "error": "日付が不正です"}), 400
+
         if not Event_Participants.query.filter_by(event_id=event_id,event_participant_id=payer_ep_id).first():
-            return render_template('add_expense.html', error="立替人がイベント参加者ではありません", event_id=event_id,participants=participants,event=event,participant_ids=participants_ids)
+            return jsonify({"success": False, "error": "立替人がイベント参加者ではありません"}), 400
         
         #カテゴリ登録・取得ブロック
         category = Expense_Categories.query.filter_by(event_id=event_id, category_name=category_name).one_or_none()
@@ -240,74 +197,72 @@ def add_expense(event_id):
         db.session.flush()
 
         #割り勘形式別計算ロジック
-        alloc_error = create_allocations(expenses.expense_id, event_id, expense_amount, split_method, participants_ids, request.form)
+        alloc_error = create_allocations(expenses.expense_id, event_id, expense_amount, split_method, participants_ids, data)
         if alloc_error:
-            return render_template('add_expense.html', error=alloc_error, event_id=event_id, participants=participants, event=event)
+            return jsonify({"success": False, "error": alloc_error}), 400
 
         db.session.commit()
 
-        return redirect(url_for('details',event_id=event_id))
+        return jsonify({"success": True, "expense": expenses.to_dict()})
 
     else: 
         event = Events.query.get_or_404(event_id)
         participants = Event_Participants.query.filter_by(event_id=event_id).all()
-        return render_template('add_expense.html',event=event,participants=participants)
+        return jsonify({"success": True, "event": event.to_dict(), "participants": [p.to_dict() for p in participants]})
     
-
-@app.route('/events/<int:event_id>/expenses/<int:expense_id>/edit',methods=['GET','POST'])
-def expense_edit(event_id, expense_id):
+#API支出編集ルート
+@api.route('/api/events/<int:event_id>/expenses/<int:expense_id>', methods=['GET', 'PUT', 'DELETE'])
+def api_expense_edit(event_id, expense_id):
     if not check_participant(event_id):
-        return redirect(url_for('event_list'))
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
     if request.method == "GET":
         events = Events.query.get_or_404(event_id)
         expenses = Expenses.query.get_or_404(expense_id)
         participants = Event_Participants.query.filter_by(event_id=event_id).filter(Event_Participants.deleted_at.is_(None)).all()
         categories = Expense_Categories.query.get(expenses.category_id)
         allocations = Allocations.query.filter_by(expense_id=expenses.expense_id).filter(Allocations.deleted_at.is_(None)).all()
-        return render_template('expense_edit.html',events=events,expenses=expenses,participants=participants,categories=categories,allocations=allocations)
-    
-    else:
+        return jsonify({"success": True, "event": events.to_dict(), "expense": expenses.to_dict(), "participants": [p.to_dict() for p in participants], "category": categories.to_dict(), "allocations": [a.to_dict() for a in allocations]})
+    if request.method == "PUT":
         event = Events.query.get_or_404(event_id)
         expenses = Expenses.query.get_or_404(expense_id)
         participants = Event_Participants.query.filter_by(event_id=event_id).filter(Event_Participants.deleted_at.is_(None)).all()
         categories = Expense_Categories.query.get(expenses.category_id)
         allocations = Allocations.query.filter_by(expense_id=expense_id).filter(Allocations.deleted_at.is_(None)).all()
 
-        category_name = request.form.get('category_name')
-        expense_amount = request.form.get('expense_amount')
-        payer_ep_id = request.form.get('payer_ep_id')
-        participants_ids = request.form.getlist('participants[]')
-        expense_at = request.form.get('expense_at')
-        description = request.form.get('description')
-        split_method = request.form.get('split_method')
+        data = request.get_json()
+        category_name = data.get('category_name')
+        expense_amount = data.get('expense_amount')
+        payer_ep_id = data.get('payer_ep_id')
+        participants_ids = data.get('participants')
+        expense_at = data.get('expense_at')
+        description = data.get('description')
+        split_method = data.get('split_method')
 
-        err_ctx = dict(event=event, events=event, expenses=expenses, participants=participants,
-                       categories=categories, allocations=allocations, participant_ids=participants_ids)
 
         if not category_name or not expense_amount or not payer_ep_id or not participants_ids or not expense_at:
-            return render_template('expense_edit.html', error="入力してください", **err_ctx)
+            return jsonify({"success": False, "error": "入力してください"}), 400
 
         if split_method not in ["EQUAL","UNITS"]:
-            return render_template('expense_edit.html', error="割り勘方式が不正です", **err_ctx)
+            return jsonify({"success": False, "error": "割り勘方式が不正です"}), 400
 
         try:
             expense_at = datetime.strptime(expense_at, '%Y-%m-%d').date()
         except ValueError:
-            return render_template('expense_edit.html', error="日付が不正です", **err_ctx)
+            return jsonify({"success": False, "error": "日付が不正です"}), 400
 
         try:
             expense_amount = Decimal(expense_amount)
         except InvalidOperation:
-            return render_template('expense_edit.html', error="金額が不正です", **err_ctx)
+            return jsonify({"success": False, "error": "金額が不正です"}), 400
 
         if expense_amount <= 0:
-            return render_template('expense_edit.html', error="金額が不正です", **err_ctx)
+            return jsonify({"success": False, "error": "金額が不正です"}), 400
 
         if event.start_date > expense_at or expense_at > event.end_date:
-            return render_template('expense_edit.html', error="日付が不正です", **err_ctx)
+            return jsonify({"success": False, "error": "日付が不正です"}), 400
 
         if not Event_Participants.query.filter_by(event_id=event_id,event_participant_id=payer_ep_id).first():
-            return render_template('expense_edit.html', error="立替人がイベント参加者ではありません", **err_ctx)
+            return jsonify({"success": False, "error": "立替人がイベント参加者ではありません"}), 400
 
         category = Expense_Categories.query.filter_by(event_id=event_id, category_name=category_name).one_or_none()
         if category is None:
@@ -325,34 +280,27 @@ def expense_edit(event_id, expense_id):
         Allocations.query.filter_by(expense_id=expense_id).delete()
 
         #割り勘形式別計算ロジック
-        alloc_error = create_allocations(expense_id, event_id, expense_amount, split_method, participants_ids, request.form)
+        alloc_error = create_allocations(expense_id, event_id, expense_amount, split_method, participants_ids, data)
         if alloc_error:
             db.session.rollback()
-            return render_template('expense_edit.html', error=alloc_error, **err_ctx)
-
+            return jsonify({"success": False, "error": alloc_error}), 400
         db.session.commit()
 
-        return redirect(url_for('details', event_id=event_id))
+        return jsonify({"success": True})
+    
+    else: #DELETE
+        expense = Expenses.query.get_or_404(expense_id)
+        expense.deleted_at = datetime.now()
 
-@app.route('/events/<int:event_id>/expenses/<int:expense_id>/delete', methods=['POST'])
-def delete_expense(event_id, expense_id):
+        Allocations.query.filter_by(expense_id=expense_id).delete()
+
+        db.session.commit()
+        return jsonify({"success": True})
+    
+@api.route('/api/events/<int:event_id>/settlements',methods=['GET'])
+def api_settlements(event_id):
     if not check_participant(event_id):
-        return redirect(url_for('event_list'))
-    expense = Expenses.query.get_or_404(expense_id)
-    expense.deleted_at = datetime.now()
-
-    Allocations.query.filter_by(expense_id=expense_id).delete()
-
-    db.session.commit()
-    return redirect(url_for('details', event_id=event_id))
-
-
-
-        
-@app.route('/events/<int:event_id>/settlements',methods=['GET'])
-def settlements(event_id):
-    if not check_participant(event_id):
-        return redirect(url_for('event_list'))
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
     if request.method == "GET":
         event = Events.query.get_or_404(event_id)
         participants = Event_Participants.query.filter_by(event_id=event_id).filter(Event_Participants.deleted_at.is_(None)).all()
@@ -403,8 +351,7 @@ def settlements(event_id):
         
         total_balance = sum((b["net"] for b in balances), Decimal('0'))
         if total_balance != Decimal('0'):
-            return render_template('settlements.html', event=event, error="内部エラー: 貸借の合計が0になっていません")
-
+            return jsonify({"success": False, "error": "内部エラー: 貸借の合計が0になっていません"}), 500
 
         creditors = []
         debtors = []
@@ -439,70 +386,71 @@ def settlements(event_id):
                 creditors.pop(0)
             if debtor["net"] == Decimal('0'):
                 debtors.pop(0)
-        
+
         if creditors or debtors:
-            return render_template('settlements.html', event=event, error="内部エラー: 貸借の計算に未処理があります")
-        
+            return jsonify({"success": False, "error": "内部エラー: 貸借の計算に未処理があります"}), 500
+
         total_settlement = sum((s["amount"] for s in settlements), Decimal('0'))
         if total_settlement != original_credit_sum:
-            return render_template('settlements.html', event=event, error="内部エラー: 精算金額の合計が債権の合計と一致しません")
-        
-        return render_template('settlements.html', event=event, settlements=settlements,settlement_summary=settlement_summary,participants=participants)
+            return jsonify({"success": False, "error": "内部エラー: 精算金額の合計が債権の合計と一致しません"}), 500
+
+        # 整合性チェック完了後にまとめて float 変換
+        for s in settlements:
+            s["amount"] = float(s["amount"])
+        for item in settlement_summary:
+            item["total_allocations"] = float(item["total_allocations"])
+            item["total_paid"]        = float(item["total_paid"])
+            item["net"]               = float(item["net"])
+
+        return jsonify({"success": True, "settlements": settlements, "settlement_summary": settlement_summary, "participants": [p.to_dict() for p in participants]})
     
-@app.route('/join_event', methods=['GET','POST'])
-def join_event():
+
+@api.route('/api/join', methods=['GET','POST'])
+def api_join_event():
     if request.method == "GET":
-        return render_template('join.html')
+        return jsonify({"success": True, "message": "Join event page"})
     
-    invite_code = request.form.get('invite_code')
+    data = request.get_json()
+    invite_code = data.get('invite_code')
     if not invite_code or not invite_code.strip():
-        return render_template('join.html', error="招待コードを入力してください")
+        return jsonify({"success": False, "error": "招待コードを入力してください"}), 400
 
     event = Events.query.filter_by(invite_code=invite_code.strip()).first()
     if event is None:
-        return render_template('join.html', error="招待コードが無効です")
+        return jsonify({"success": False, "error": "招待コードが無効です"}), 400
 
     unlinked = Event_Participants.query.filter_by(event_id=event.event_id, user_id=None).all()
 
-    return render_template('join_select.html', event=event, unlinked=unlinked)
+    return jsonify({"success": True, "event": event.to_dict(), "unlinked": [ep.to_dict() for ep in unlinked]})
 
 
 
-@app.route('/join_event/confirm/<int:event_id>', methods=['POST'])
-def join_event_confirm(event_id):
-    selected_ep_id = request.form.get('selected_ep_id')
+@api.route('/api/join/confirm/<int:event_id>', methods=['POST'])
+def api_join_event_confirm(event_id):
+    data = request.get_json()
+    selected_ep_id = data.get('selected_ep_id')
 
     user_id = session.get("user_id")
     if user_id is None:
         user_id = guest_create()
 
     if selected_ep_id == "new":
-        display_name = request.form.get('display_name')
+        display_name = data.get('display_name')
         if not display_name or not display_name.strip():
-            return render_template('join_select.html', event=Events.query.get(event_id), unlinked=Event_Participants.query.filter_by(event_id=event_id, user_id=None).all(), error="表示名を入力してください")
+            return jsonify({"success": False, "error": "表示名を入力してください"}), 400
         new_participant = Event_Participants(event_id=event_id, user_id=user_id, display_name=display_name, status='joined')
         db.session.add(new_participant)
 
     else:
         participant = Event_Participants.query.get(selected_ep_id)
         if participant is None:
-            return render_template('join_select.html', event=Events.query.get(event_id), unlinked=Event_Participants.query.filter_by(event_id=event_id, user_id=None).all(), error="参加者の選択が不正です")
+            return jsonify({"success": False, "error": "参加者の選択が不正です"}), 400
         participant.user_id = user_id
         participant.status = 'joined'
         participant.joined_at = datetime.now()
 
     db.session.commit()
-    return redirect(url_for('details', event_id=event_id))        
-    
-        
-        
-    
-
-
-
-
-        
-
+    return jsonify({"success": True, "message": "イベントに参加しました"})
 
 
 #ゲスト作成
@@ -629,5 +577,3 @@ def create_allocations(expense_id, event_id, expense_amount, split_method, parti
         return "割り勘方式が不正です"
 
     return None
-
-

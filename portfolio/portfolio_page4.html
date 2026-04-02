@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ポートフォリオ - 今後の開発計画</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page { size: A4 portrait; margin: 8mm; }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background: #fff;
+      color: #222;
+      font-size: 10px;
+      line-height: 1.35;
+    }
+    .page { max-width: 740px; margin: 0 auto; padding: 10px 14px; }
+
+    .header { border-bottom: 2px solid #2563eb; padding-bottom: 5px; margin-bottom: 8px; }
+    .header-label { font-size: 7.5px; letter-spacing: .1em; color: #2563eb; font-weight: 700; text-transform: uppercase; }
+    .header h1 { font-size: 18px; font-weight: 700; color: #111; margin: 1px 0; }
+    .header .subtitle { font-size: 9.5px; color: #555; }
+    .header-meta { font-size: 8px; color: #888; margin-top: 2px; }
+
+    .section { margin-bottom: 8px; }
+    .section-title {
+      font-size: 8px; font-weight: 700; color: #2563eb; letter-spacing: .08em;
+      text-transform: uppercase; border-left: 3px solid #2563eb;
+      padding-left: 5px; margin-bottom: 4px;
+    }
+
+    /* 現在地 */
+    .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .status-card { border: 1px solid #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .status-card-header { padding: 3px 8px; font-size: 7.5px; font-weight: 700; letter-spacing: .04em; }
+    .status-card-header.done { background: #dcfce7; color: #15803d; }
+    .status-card-header.wip  { background: #fef9c3; color: #854d0e; }
+    .status-card ul { padding: 4px 8px 5px; list-style: none; }
+    .status-card ul li {
+      font-size: 9px; color: #334155; padding: 1px 0 1px 12px; position: relative;
+    }
+    .status-card ul li::before { content: '–'; position: absolute; left: 0; color: #94a3b8; }
+
+    /* ロードマップ */
+    .roadmap { position: relative; padding-left: 22px; }
+    .roadmap::before {
+      content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+      width: 2px; background: #e2e8f0;
+    }
+    .roadmap-item { position: relative; margin-bottom: 8px; }
+    .roadmap-item:last-child { margin-bottom: 0; }
+    .roadmap-dot {
+      position: absolute; left: -19px; top: 4px;
+      width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff;
+    }
+    .dot-short { background: #2563eb; }
+    .dot-mid   { background: #7c3aed; }
+    .dot-long  { background: #64748b; }
+
+    .roadmap-phase {
+      display: inline-block; font-size: 7.5px; font-weight: 700;
+      letter-spacing: .06em; border-radius: 3px; padding: 1px 7px; margin-bottom: 2px;
+    }
+    .phase-short { background: #dbeafe; color: #1d4ed8; }
+    .phase-mid   { background: #ede9fe; color: #5b21b6; }
+    .phase-long  { background: #f1f5f9; color: #475569; }
+
+    .roadmap-title { font-size: 10px; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
+    .roadmap-list { list-style: none; padding: 0; }
+    .roadmap-list li {
+      font-size: 9px; color: #475569; padding: 1px 0 1px 12px; position: relative;
+    }
+    .roadmap-list li::before { content: '›'; position: absolute; left: 0; color: #94a3b8; font-weight: 700; }
+
+    /* 優先順位 */
+    .priority-table { width: 100%; border-collapse: collapse; font-size: 9px; }
+    .priority-table th {
+      background: #f1f5f9; text-align: left; padding: 3px 7px;
+      font-weight: 600; color: #475569; border: 1px solid #e2e8f0;
+    }
+    .priority-table td { padding: 3px 7px; border: 1px solid #e2e8f0; color: #334155; vertical-align: top; }
+    .priority-num {
+      display: inline-block; background: #2563eb; color: #fff;
+      font-size: 8px; font-weight: 700; border-radius: 50%;
+      width: 16px; height: 16px; text-align: center; line-height: 16px; margin-right: 4px;
+    }
+
+    /* 補足 */
+    .note-box {
+      border: 1px solid #e2e8f0; border-left: 3px solid #16a34a; border-radius: 3px;
+      padding: 5px 8px; background: #f0fdf4; font-size: 9px; color: #14532d; line-height: 1.5;
+    }
+    .note-box p + p { margin-top: 3px; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-label">Portfolio — Page 4 / 今後の開発計画</div>
+    <h1>今後の開発計画</h1>
+    <div class="subtitle">割り勘管理アプリ — 現在地の整理と今後のロードマップ</div>
+    <div class="header-meta">2026年3月時点　／　継続開発中</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">現在地の整理</div>
+    <div class="status-grid">
+      <div class="status-card">
+        <div class="status-card-header done">完成済み</div>
+        <ul>
+          <li>DB設計・モデル定義（7テーブル）</li>
+          <li>イベント作成・編集・削除</li>
+          <li>招待コードによる参加機能</li>
+          <li>支出記録（均等割り・口数割り）</li>
+          <li>精算額の自動計算ロジック</li>
+          <li>Jinja2テンプレート画面</li>
+          <li>Renderへのデプロイ</li>
+        </ul>
+      </div>
+      <div class="status-card">
+        <div class="status-card-header wip">未完成・対象外</div>
+        <ul>
+          <li>APIルート整備（実装中）</li>
+          <li>フロントエンド刷新（未着手）</li>
+          <li>モバイルアプリ対応（未着手）</li>
+          <li>アカウント認証（スコープ外）</li>
+          <li>テスト・バリデーション強化（未着手）</li>
+          <li>ユーザーフィードバック収集（未着手）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">今後の開発ロードマップ</div>
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="roadmap-dot dot-short"></div>
+        <div class="roadmap-phase phase-short">SHORT — 直近</div>
+        <div class="roadmap-title">実際に使えるWebアプリとして完成させる</div>
+        <ul class="roadmap-list">
+          <li>APIルートの整備を完了し、フロントと連携できる状態にする</li>
+          <li>フロントエンドをシンプルなReact構成に刷新する</li>
+          <li>主要な入力バリデーションとエラーハンドリングを強化する</li>
+          <li>実際に自分や身近な人に使ってもらい、動作を確認する</li>
+        </ul>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot dot-mid"></div>
+        <div class="roadmap-phase phase-mid">MID — 中期</div>
+        <div class="roadmap-title">ユーザーの反応を見ながら改善を繰り返す</div>
+        <ul class="roadmap-list">
+          <li>実際の利用者のフィードバックをもとにUI・UXを改善する</li>
+          <li>精算通知・リマインダーなど実用性を高める機能を追加する</li>
+          <li>テストコードを整備し、品質維持を仕組み化する</li>
+          <li>Webアプリとして正式にリリースを目指す</li>
+        </ul>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot dot-long"></div>
+        <div class="roadmap-phase phase-long">LONG — 長期</div>
+        <div class="roadmap-title">モバイルアプリとしてもリリースする</div>
+        <ul class="roadmap-list">
+          <li>React Native 等でモバイルアプリ版を開発する</li>
+          <li>WebアプリとモバイルアプリでAPIを共通化した構成にする</li>
+          <li>継続的な改善サイクルを回しながら長期運用を目指す</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">優先順位と理由</div>
+    <table class="priority-table">
+      <thead>
+        <tr><th style="width:6%;">順位</th><th style="width:30%;">タスク</th><th>優先する理由</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:center;"><span class="priority-num">1</span></td>
+          <td>APIルートの整備完了</td>
+          <td>フロント刷新・モバイル対応どちらにも必要な土台。ここが完成しないと次のステップに進めない。</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><span class="priority-num">2</span></td>
+          <td>フロントエンドのReact化</td>
+          <td>Jinja2テンプレートではモバイルへの流用が困難。早期にAPIと分離することで将来の拡張コストを下げる。</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><span class="priority-num">3</span></td>
+          <td>実際に使える状態でのリリース</td>
+          <td>動くものを出してフィードバックから学ぶ姿勢を優先。完璧な設計より検証サイクルを回すことを重視する。</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><span class="priority-num">4</span></td>
+          <td>モバイルアプリ化</td>
+          <td>割り勘は外出先で使うシーンが多い。Webで動作確認後、モバイル対応で利用シーンを広げる。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">補足コメント</div>
+    <div class="note-box">
+      <p>現時点ではバックエンドのコア機能は完成しており、APIルートの整備とフロント刷新が直近の課題です。未完成であることは把握したうえで、次に何をすべきかを自分で整理しながら開発を継続しています。</p>
+      <p>「まず実際に使える状態にする」「使ってもらいながら改善する」という順番を意識しており、完璧な設計を目指すより動くものを出してフィードバックから学ぶ姿勢を大切にしています。最終的にはWebアプリ・モバイルアプリの両方でリリースまで持っていくことを目標に、引き続き自走で開発を進めていきます。</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

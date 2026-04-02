@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ポートフォリオ - 割り勘管理アプリ</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background: #f1f5f9;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 640px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .header-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: #2563eb;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 6px;
+    }
+    .header p {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 22px 20px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .card:hover {
+      border-color: #2563eb;
+      box-shadow: 0 4px 16px rgba(37,99,235,0.10);
+    }
+
+    .card-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #2563eb;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .card-desc {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+    .card-arrow {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    @media (max-width: 480px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-label">Portfolio — 割り勘管理アプリ</div>
+    <h1>ポートフォリオ目次</h1>
+    <p>エンジニア系アルバイト応募用　／　2026年3月時点</p>
+  </div>
+
+  <div class="cards">
+    <a class="card" href="portfolio_page1.html">
+      <div class="card-num">Page 1</div>
+      <div class="card-title">アプリ概要・システム構成・開発進捗</div>
+      <div class="card-desc">何を作っているか、使用技術、システム構成、どこまで完成しているかを整理して示す。</div>
+      <div class="card-arrow">→ 開く</div>
+    </a>
+    <a class="card" href="portfolio_page2.html">
+      <div class="card-num">Page 2</div>
+      <div class="card-title">データ設計（ER図）</div>
+      <div class="card-desc">7テーブルのDB設計、テーブル同士の関係、設計上の工夫を説明する。</div>
+      <div class="card-arrow">→ 開く</div>
+    </a>
+    <a class="card" href="portfolio_page3.html">
+      <div class="card-num">Page 3</div>
+      <div class="card-title">主要ロジックの実装例</div>
+      <div class="card-desc">精算ロジック・支出登録・イベント作成の3つのバックエンド実装をコード付きで紹介する。</div>
+      <div class="card-arrow">→ 開く</div>
+    </a>
+    <a class="card" href="portfolio_page4.html">
+      <div class="card-num">Page 4</div>
+      <div class="card-title">今後の開発計画</div>
+      <div class="card-desc">現在地の整理、短期・中期・長期のロードマップ、優先順位と理由を示す。</div>
+      <div class="card-arrow">→ 開く</div>
+    </a>
+  </div>
+
+  <div class="footer">Python / Flask / PostgreSQL / Render　―　継続開発中</div>
+
+</div>
+</body>
+</html>
