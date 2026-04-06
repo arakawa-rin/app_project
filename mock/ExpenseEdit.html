@@ -1,0 +1,534 @@
+#口数割
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>支出を編集</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed": "#2a3757",
+              "outline-variant": "#adadac",
+              "error-container": "#f95630",
+              "surface-variant": "#dcdddc",
+              "surface-dim": "#d4d4d4",
+              "surface-container-low": "#f1f1f0",
+              "on-secondary-fixed": "#00474b",
+              "inverse-primary": "#f9873e",
+              "on-background": "#2e2f2f",
+              "primary-container": "#f9873e",
+              "on-error": "#ffefec",
+              "tertiary-container": "#c9d6fe",
+              "inverse-on-surface": "#9d9d9c",
+              "primary-fixed-dim": "#e97b32",
+              "on-tertiary": "#f0f2ff",
+              "tertiary-fixed": "#c9d6fe",
+              "on-secondary-container": "#145a5f",
+              "surface-container-highest": "#dcdddc",
+              "on-tertiary-fixed-variant": "#475475",
+              "on-surface-variant": "#5b5c5b",
+              "surface-bright": "#f7f6f5",
+              "inverse-surface": "#0d0e0e",
+              "on-error-container": "#520c00",
+              "on-primary-fixed": "#100300",
+              "tertiary-fixed-dim": "#bbc9f0",
+              "surface-tint": "#964300",
+              "secondary-fixed-dim": "#a1dfe5",
+              "secondary-container": "#afedf3",
+              "on-secondary-fixed-variant": "#226469",
+              "on-secondary": "#cdfbff",
+              "on-surface": "#2e2f2f",
+              "secondary-fixed": "#afedf3",
+              "on-primary-container": "#451b00",
+              "on-primary-fixed-variant": "#542200",
+              "on-primary": "#fff0e9",
+              "surface-container-high": "#e2e2e1",
+              "tertiary": "#4e5b7d",
+              "primary-dim": "#843a00",
+              "error-dim": "#b92902",
+              "background": "#f7f6f5",
+              "surface-container": "#e8e8e7",
+              "secondary": "#226469",
+              "on-tertiary-container": "#3d4a6b",
+              "surface": "#f7f6f5",
+              "outline": "#767776",
+              "secondary-dim": "#11585d",
+              "primary-fixed": "#f9873e",
+              "primary": "#964300",
+              "tertiary-dim": "#424f70",
+              "surface-container-lowest": "#ffffff",
+              "error": "#b02500"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+    </style>
+</head>
+<body class="bg-stone-200 flex justify-center min-h-screen"><div class="w-[390px] bg-background text-on-surface font-body min-h-screen relative shadow-2xl overflow-x-hidden pb-20">
+<!-- Top App Bar -->
+<header class="bg-gradient-to-br docked full-width top-0 shadow-lg shadow-orange-900/20 z-40 relative overflow-hidden from-orange-600 via-orange-400 to-secondary-container">
+<!-- Airplane trail visual effect -->
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+<svg class="w-full h-full" viewbox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+<path d="M-50,150 Q150,50 450,120" fill="none" stroke="white" stroke-dasharray="10 5" stroke-width="2"></path>
+<path d="M-50,180 Q200,80 450,150" fill="none" stroke="white" stroke-dasharray="5 15" stroke-width="1"></path>
+</svg>
+</div>
+<div class="flex justify-between items-center w-full px-6 py-6 relative z-10">
+<button class="text-white hover:opacity-80 transition-opacity scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="text-white font-headline font-bold text-lg tracking-tight">支出を編集</h1>
+<p class="text-white/80 font-headline text-xs tracking-wider">沖縄卒業旅行 2024</p>
+</div>
+<div class="w-6"></div> <!-- Spacer for centering -->
+</div>
+</header>
+<main class="w-full px-6 space-y-6 mt-4">
+<!-- Amount Input Card -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_20px_40px_rgba(46,47,47,0.04)] text-center relative overflow-hidden">
+<label class="block text-outline font-label text-[10px] uppercase tracking-widest mb-2">支出金額</label>
+<div class="flex items-baseline justify-center gap-1">
+<span class="text-primary font-headline font-extrabold text-2xl">¥</span>
+<span class="text-on-surface font-headline font-extrabold text-5xl tracking-tighter">8,000</span>
+</div>
+<!-- Number Pad Grid -->
+<div class="grid grid-cols-3 gap-3 mt-8">
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">1</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">2</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">3</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">4</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">5</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">6</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">7</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">8</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">9</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">.</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">0</button>
+<button class="p-4 rounded-lg bg-primary-container/20 text-primary font-headline font-bold text-xl hover:bg-primary-container/30 transition-colors">
+<span class="material-symbols-outlined align-middle">backspace</span>
+</button>
+</div>
+</section>
+<!-- Category & Date Card -->
+<section class="bg-surface-container-lowest rounded-lg p-6 shadow-[0_10px_30px_rgba(46,47,47,0.03)] space-y-6">
+<div class="flex gap-4">
+<div class="flex-1 space-y-2">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">カテゴリ</label>
+<div class="relative">
+<input class="w-full bg-surface-container-high border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body placeholder:text-on-surface placeholder:opacity-100" placeholder="ディナー" type="text"/>
+</div>
+</div>
+<div class="flex-1 space-y-2">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">日付</label>
+<input class="w-full bg-surface-container-high border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body" type="text" value="2024/03/15"/>
+</div>
+</div>
+<!-- Payer Selection -->
+<div class="space-y-3">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">立替者</label>
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+<button class="px-5 py-2 rounded-full bg-secondary text-white font-label text-xs whitespace-nowrap shadow-md shadow-secondary/20">健太</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs whitespace-nowrap hover:bg-surface-container-highest transition-colors">さとう</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs whitespace-nowrap hover:bg-surface-container-highest transition-colors">みずき</button>
+</div>
+</div>
+</section>
+<!-- Split Method Card -->
+<section class="bg-surface-container-lowest rounded-lg p-6 shadow-[0_10px_30px_rgba(46,47,47,0.03)] space-y-6">
+<div class="space-y-4">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">割り勘方式</label>
+<!-- Segmented Control -->
+<div class="grid grid-cols-2 p-1 bg-surface-container-high rounded-lg">
+<button class="py-2 text-xs font-bold rounded-md transition-all text-on-surface-variant hover:bg-surface-container-lowest">均等割り</button>
+<button class="py-2 text-xs font-bold rounded-md bg-white shadow-sm text-secondary">口数割り</button>
+</div>
+</div>
+<!-- Proportional Split Detail (Unit Price) -->
+<div class="space-y-2 bg-secondary/5 p-4 rounded-lg border border-secondary/10">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<label class="block text-secondary font-label text-[10px] font-bold uppercase tracking-wider">1口あたりの金額</label>
+<div class="flex items-center gap-2"><span class="text-secondary font-headline font-bold text-lg">¥</span>
+<input class="w-full max-w-[120px] bg-white border border-outline-variant rounded-full px-4 py-2 text-xl font-headline font-extrabold text-on-surface focus:ring-2 focus:ring-secondary/30 shadow-sm" type="number" value="1000"/></div>
+</div>
+</div>
+</div>
+<!-- Participant Selection List -->
+<div class="space-y-3">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">負担者を選択</label>
+<div class="space-y-2"><!-- Participant 1 -->
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 rounded-md bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-white" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-sm font-medium">健太</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-secondary font-headline font-bold text-xs">¥3,000</span>
+<div class="flex items-center gap-1">
+<input class="w-12 bg-white border border-outline-variant rounded px-2 py-1 text-xs text-center font-headline font-bold focus:ring-1 focus:ring-secondary/30" type="number" value="3"/>
+<span class="text-[10px] font-bold text-outline">口</span>
+</div>
+</div>
+</div>
+<!-- Participant 2 -->
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 rounded-md bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-white" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-sm font-medium">さとう</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-secondary font-headline font-bold text-xs">¥5,000</span>
+<div class="flex items-center gap-1">
+<input class="w-12 bg-white border border-outline-variant rounded px-2 py-1 text-xs text-center font-headline font-bold focus:ring-1 focus:ring-secondary/30" type="number" value="5"/>
+<span class="text-[10px] font-bold text-outline">口</span>
+</div>
+</div>
+</div>
+<!-- Participant 3 -->
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 rounded-md border border-outline-variant flex items-center justify-center bg-white">
+</div>
+<span class="text-sm font-medium text-outline">みずき</span>
+</div>
+<div class="flex items-center gap-3 opacity-40">
+<span class="text-secondary/50 font-headline font-bold text-xs">¥0</span>
+<div class="flex items-center gap-1">
+<input class="w-12 bg-white border border-outline-variant rounded px-2 py-1 text-xs text-center font-headline font-bold" disabled="" type="number" value="0"/>
+<span class="text-[10px] font-bold text-outline">口</span>
+</div>
+</div>
+</div></div>
+</div>
+<!-- Summary Card (Updated) -->
+<div class="p-5 bg-teal-50 dark:bg-teal-900/10 rounded-xl border border-teal-100 dark:border-teal-800/30 flex flex-col gap-3 relative overflow-hidden py-6 my-2">
+<!-- Success Badge / Icon -->
+<div class="absolute -right-2 -top-2 opacity-10">
+<span class="material-symbols-outlined text-7xl text-teal-600" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex justify-between items-end relative z-10 gap-4">
+<div class="flex flex-col text-right flex-1 items-center w-full">
+<span class="text-xs font-bold text-teal-600 uppercase tracking-wider flex items-center gap-1 mb-1 justify-center">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span> 一致
+            </span>
+<div class="flex items-baseline gap-1 flex-wrap justify-center">
+<span class="text-xs font-bold text-teal-600/70 uppercase tracking-wider mr-1">残り:</span>
+<span class="text-2xl font-headline font-extrabold text-teal-600">0</span>
+<span class="text-sm font-bold text-teal-600/70 mr-2">口</span>
+<span class="text-xl font-headline font-extrabold text-teal-600">/</span>
+<span class="text-2xl font-headline font-extrabold text-teal-600 ml-1">¥ 0</span>
+</div>
+</div>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden relative z-10 mt-2">
+<div class="h-full bg-teal-500 w-full rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2 pt-2 border-t border-surface-container-high">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">メモ</label>
+<textarea class="w-full bg-surface-container-high border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body resize-none" placeholder="お土産代、ランチなど..." rows="2"></textarea>
+</div>
+</section><div class="mt-10 flex flex-col items-center">
+<button class="text-error font-headline font-bold text-sm underline underline-offset-8 active:opacity-60 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="delete">delete</span>
+<span>この支出を削除</span>
+</button>
+<p class="mt-4 text-[10px] text-outline text-center px-10">
+                削除されたデータは復元できません。よくご確認ください。
+            </p>
+</div>
+<!-- Submit Button -->
+<div class="px-6 pb-4">
+<button class="w-full py-5 rounded-full bg-gradient-to-r from-[#00bcd4] to-[#2196f3] text-white font-headline font-extrabold text-lg shadow-xl shadow-blue-500/30 active:scale-[0.98] transition-transform">
+                登録する
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="absolute bottom-0 left-0 w-full z-50 flex items-center px-4 bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl border-t border-stone-200 dark:border-stone-800 pb-2 h-20 justify-between">
+<a class="flex flex-col items-center justify-center text-[#964300] py-2 flex-1" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="home">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-tight mt-1">イベント一覧</span>
+</a>
+<div class="flex-1 flex flex-col items-center justify-center">
+<button class="bg-gradient-to-r from-[#00bcd4] to-[#2196f3] w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 py-2 flex-1" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-tight mt-1">設定</span>
+</a>
+</nav>
+</div></body></html>
+
+#均等割り
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>支出を登録</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed": "#2a3757",
+              "outline-variant": "#adadac",
+              "error-container": "#f95630",
+              "surface-variant": "#dcdddc",
+              "surface-dim": "#d4d4d4",
+              "surface-container-low": "#f1f1f0",
+              "on-secondary-fixed": "#00474b",
+              "inverse-primary": "#f9873e",
+              "on-background": "#2e2f2f",
+              "primary-container": "#f9873e",
+              "on-error": "#ffefec",
+              "tertiary-container": "#c9d6fe",
+              "inverse-on-surface": "#9d9d9c",
+              "primary-fixed-dim": "#e97b32",
+              "on-tertiary": "#f0f2ff",
+              "tertiary-fixed": "#c9d6fe",
+              "on-secondary-container": "#145a5f",
+              "surface-container-highest": "#dcdddc",
+              "on-tertiary-fixed-variant": "#475475",
+              "on-surface-variant": "#5b5c5b",
+              "surface-bright": "#f7f6f5",
+              "inverse-surface": "#0d0e0e",
+              "on-error-container": "#520c00",
+              "on-primary-fixed": "#100300",
+              "tertiary-fixed-dim": "#bbc9f0",
+              "surface-tint": "#964300",
+              "secondary-fixed-dim": "#a1dfe5",
+              "secondary-container": "#afedf3",
+              "on-secondary-fixed-variant": "#226469",
+              "on-secondary": "#cdfbff",
+              "on-surface": "#2e2f2f",
+              "secondary-fixed": "#afedf3",
+              "on-primary-container": "#451b00",
+              "on-primary-fixed-variant": "#542200",
+              "on-primary": "#fff0e9",
+              "surface-container-high": "#e2e2e1",
+              "tertiary": "#4e5b7d",
+              "primary-dim": "#843a00",
+              "error-dim": "#b92902",
+              "background": "#f7f6f5",
+              "surface-container": "#e8e8e7",
+              "secondary": "#226469",
+              "on-tertiary-container": "#3d4a6b",
+              "surface": "#f7f6f5",
+              "outline": "#767776",
+              "secondary-dim": "#11585d",
+              "primary-fixed": "#f9873e",
+              "primary": "#964300",
+              "tertiary-dim": "#424f70",
+              "surface-container-lowest": "#ffffff",
+              "error": "#b02500"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="bg-gradient-to-br docked full-width top-0 shadow-lg shadow-orange-900/20 z-40 relative overflow-hidden from-orange-600 via-orange-400 to-secondary-container">
+<!-- Airplane trail visual effect -->
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+<svg class="w-full h-full" viewbox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+<path d="M-50,150 Q150,50 450,120" fill="none" stroke="white" stroke-dasharray="10 5" stroke-width="2"></path>
+<path d="M-50,180 Q200,80 450,150" fill="none" stroke="white" stroke-dasharray="5 15" stroke-width="1"></path>
+</svg>
+</div>
+<div class="flex justify-between items-center w-full px-6 py-6 relative z-10 max-w-[390px] mx-auto">
+<button class="text-white hover:opacity-80 transition-opacity scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="text-white font-headline font-bold text-lg tracking-tight">支出を編集</h1>
+<p class="text-white/80 font-headline text-xs tracking-wider">沖縄卒業旅行 2024</p>
+</div>
+<div class="w-6"></div> <!-- Spacer for centering -->
+</div>
+</header>
+<main class="mx-auto px-6 mt-8 space-y-6 max-w-[390px]">
+<!-- Amount Input Card -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_20px_40px_rgba(46,47,47,0.04)] text-center relative overflow-hidden">
+<label class="block text-outline font-label text-[10px] uppercase tracking-widest mb-2">支出金額</label>
+<div class="flex items-baseline justify-center gap-1">
+<span class="text-primary font-headline font-extrabold text-2xl">¥</span>
+<span class="text-on-surface font-headline font-extrabold text-5xl tracking-tighter">8,000</span>
+</div>
+<!-- Number Pad Grid -->
+<div class="grid grid-cols-3 gap-3 mt-8">
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">1</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">2</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">3</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">4</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">5</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">6</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">7</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">8</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">9</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">.</button>
+<button class="p-4 rounded-lg bg-surface-container-low font-headline font-bold text-xl hover:bg-surface-container-high transition-colors">0</button>
+<button class="p-4 rounded-lg bg-primary-container/20 text-primary font-headline font-bold text-xl hover:bg-primary-container/30 transition-colors">
+<span class="material-symbols-outlined align-middle">backspace</span>
+</button>
+</div>
+</section>
+<!-- Category & Date Card -->
+<section class="bg-surface-container-lowest rounded-lg p-6 shadow-[0_10px_30px_rgba(46,47,47,0.03)] space-y-6">
+<div class="flex gap-4">
+<div class="flex-1 space-y-2">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">カテゴリ</label>
+<div class="relative">
+<input class="w-full bg-surface-container-high border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body text-on-surface" placeholder="例：食費、交通費" type="text" value="ディナー"/>
+</div>
+</div>
+<div class="flex-1 space-y-2">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">日付</label>
+<input class="w-full bg-surface-container-high border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body" type="text" value="2024/03/15"/>
+</div>
+</div>
+<!-- Payer Selection -->
+<div class="space-y-3">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">立替者</label>
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+<button class="px-5 py-2 rounded-full bg-secondary text-white font-label text-xs whitespace-nowrap shadow-md shadow-secondary/20">健太</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs whitespace-nowrap hover:bg-surface-container-highest transition-colors">さとう</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-label text-xs whitespace-nowrap hover:bg-surface-container-highest transition-colors">みずき</button>
+</div>
+</div>
+</section>
+<!-- Split Method Card -->
+<section class="bg-surface-container-lowest rounded-lg p-6 shadow-[0_10px_30px_rgba(46,47,47,0.03)] space-y-6">
+<div class="space-y-4">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">割り勘方式</label>
+<!-- Segmented Control -->
+<div class="grid grid-cols-2 p-1 bg-surface-container-high rounded-lg">
+<button class="py-2 text-xs font-bold rounded-md bg-white shadow-sm text-secondary transition-all">均等割り</button>
+<button class="py-2 text-xs font-bold rounded-md text-on-surface-variant hover:bg-surface-container-lowest">口数割り</button>
+</div>
+</div>
+<!-- Participant Selection List -->
+<div class="space-y-3">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">負担者を選択</label>
+<div class="space-y-2"><!-- Participant 1 -->
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 rounded-md bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-white" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-sm font-medium">健太</span>
+</div>
+</div>
+<!-- Participant 2 -->
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 rounded-md bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-white" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-sm font-medium">さとう</span>
+</div>
+</div>
+<!-- Participant 3 -->
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-3">
+<div class="w-6 h-6 rounded-md border border-outline-variant flex items-center justify-center bg-white">
+</div>
+<span class="text-sm font-medium text-outline">みずき</span>
+</div>
+</div></div>
+</div>
+<div class="space-y-2 pt-2 border-t border-surface-container-high">
+<label class="block text-on-surface-variant font-label text-xs font-semibold">メモ</label>
+<textarea class="w-full bg-surface-container-high border-none rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body resize-none" placeholder="お土産代、ランチなど..." rows="2"></textarea>
+</div>
+</section><div class="mt-10 flex flex-col items-center">
+<button class="text-error font-headline font-bold text-sm underline underline-offset-8 active:opacity-60 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="delete">delete</span>
+<span>この支出を削除</span>
+</button>
+<p class="mt-4 text-[10px] text-outline text-center px-10">
+                削除されたデータは復元できません。よくご確認ください。
+            </p>
+</div>
+<!-- Submit Button -->
+<div class="pt-4">
+<button class="w-full py-5 rounded-full bg-gradient-to-r from-[#00bcd4] to-[#2196f3] text-white font-headline font-extrabold text-lg shadow-xl shadow-blue-500/30 active:scale-[0.98] transition-transform">
+                登録する
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 flex items-center px-4 bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl border-t border-stone-200 dark:border-stone-800 pb-2 h-20 justify-between">
+<a class="flex flex-col items-center justify-center text-[#964300] py-2 flex-1" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="home">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-tight mt-1">イベント一覧</span>
+</a>
+<div class="flex-1 flex flex-col items-center justify-center">
+<button class="bg-gradient-to-r from-[#00bcd4] to-[#2196f3] w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 py-2 flex-1" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-tight mt-1">設定</span>
+</a>
+</nav>
+</body></html>

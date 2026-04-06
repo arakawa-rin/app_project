@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#c9d6fe",
+              "on-secondary-container": "#145a5f",
+              "error": "#b02500",
+              "on-tertiary": "#f0f2ff",
+              "tertiary-container": "#c9d6fe",
+              "on-secondary-fixed": "#00474b",
+              "inverse-on-surface": "#9d9d9c",
+              "surface-container-high": "#e2e2e1",
+              "background": "#f7f6f5",
+              "secondary-container": "#afedf3",
+              "on-surface": "#2e2f2f",
+              "on-primary-fixed": "#100300",
+              "secondary": "#226469",
+              "primary-dim": "#843a00",
+              "on-secondary-fixed-variant": "#226469",
+              "surface-variant": "#dcdddc",
+              "on-tertiary-fixed": "#2a3757",
+              "surface-tint": "#964300",
+              "tertiary": "#4e5b7d",
+              "outline-variant": "#adadac",
+              "surface-container": "#e8e8e7",
+              "outline": "#767776",
+              "primary": "#964300",
+              "primary-fixed": "#f9873e",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#5b5c5b",
+              "surface": "#f7f6f5",
+              "surface-dim": "#d4d4d4",
+              "on-primary": "#fff0e9",
+              "error-dim": "#b92902",
+              "surface-container-highest": "#dcdddc",
+              "on-primary-container": "#451b00",
+              "error-container": "#f95630",
+              "surface-bright": "#f7f6f5",
+              "surface-container-low": "#f1f1f0",
+              "inverse-surface": "#0d0e0e",
+              "on-background": "#2e2f2f",
+              "on-tertiary-container": "#3d4a6b",
+              "on-error": "#ffefec",
+              "secondary-fixed": "#afedf3",
+              "on-secondary": "#cdfbff",
+              "on-tertiary-fixed-variant": "#475475",
+              "inverse-primary": "#f9873e",
+              "on-primary-fixed-variant": "#542200",
+              "secondary-dim": "#11585d",
+              "tertiary-dim": "#424f70",
+              "primary-container": "#f9873e",
+              "primary-fixed-dim": "#e97b32",
+              "tertiary-fixed-dim": "#bbc9f0",
+              "secondary-fixed-dim": "#a1dfe5",
+              "on-error-container": "#520c00"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-gradient-to-br from-orange-800 to-orange-400 shadow-lg shadow-orange-900/20 w-full px-6 py-4 flex items-center min-h-[64px] justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white hover:opacity-80 transition-opacity cursor-pointer" data-icon="arrow_back">arrow_back</span>
+</div>
+<span class="font-headline italic font-extrabold text-on-primary text-xl tracking-tighter ml-auto">TripSplit</span>
+</header>
+<main class="flex-grow flex flex-col items-center">
+<!-- Hero Section -->
+<section class="w-full bg-gradient-to-br pt-12 pb-24 px-8 rounded-b-[3rem] text-center shadow-xl shadow-primary/10 from-orange-600 via-orange-400 to-secondary-container">
+<div class="max-w-md mx-auto">
+<div class="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-white text-4xl" data-icon="group_add" style="font-variation-settings: 'FILL' 1;">group_add</span>
+</div>
+<h2 class="font-headline font-extrabold text-3xl text-white mb-3">招待コードで参加</h2>
+<p class="text-on-primary/90 text-sm font-medium">幹事から共有されたコードを入力してください</p>
+</div>
+</section>
+<!-- Main Content (Input Card) -->
+<section class="w-full max-w-md px-6 -mt-12 pb-8">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_40px_40px_rgba(46,47,47,0.06)] border border-outline-variant/10">
+<div class="flex flex-col gap-8">
+<!-- Invite Code Input Area -->
+<div class="relative">
+<label class="block text-center font-label text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-6">6桁の招待コードを入力</label>
+<div class="flex justify-center gap-2">
+<input class="w-full bg-surface-container-high border-none rounded-lg py-5 text-center font-headline font-bold text-4xl tracking-[0.75rem] text-primary focus:ring-2 focus:ring-primary/20 transition-all uppercase placeholder:text-outline-variant/30" maxlength="6" placeholder="TRP000" type="text"/>
+</div>
+</div>
+<!-- Action Button -->
+<div class="flex flex-col gap-4">
+<button class="w-full bg-gradient-to-r from-primary to-primary-fixed text-white font-headline font-bold py-5 rounded-full shadow-lg shadow-primary/30 hover:opacity-90 active:scale-95 transition-all text-lg">
+                            参加する
+                        </button>
+</div>
+</div>
+</div>
+<!-- Illustration/Atmosphere Card -->
+</section>
+</main>
+<!-- BottomNavBar (Semantic logic: Entry screen suppress FAB, show nav as shell) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-white border-t border-gray-100 px-10 pb-4 pt-2 flex justify-between items-center h-20 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]"><!-- Left Tab: Inactive -->
+<a class="flex flex-col items-center justify-center text-gray-400 gap-1 w-20" href="#">
+<span class="material-symbols-outlined text-[26px]">home</span>
+<span class="text-[10px] font-bold">イベント一覧</span>
+</a>
+<!-- Center Floating Button (Integrated into row) -->
+<div class="flex items-center justify-center">
+<button class="w-14 h-14 bg-gradient-to-br from-[#00bcd4] to-[#2196f3] rounded-full flex items-center justify-center text-white shadow-lg shadow-cyan-500/30 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl font-bold">add</span>
+</button>
+</div>
+<!-- Right Tab: Inactive -->
+<a class="flex flex-col items-center justify-center text-gray-400 gap-1 w-20" href="#">
+<span class="material-symbols-outlined text-[26px]">settings</span>
+<span class="text-[10px] font-bold">設定</span>
+</a></nav>
+</body></html>

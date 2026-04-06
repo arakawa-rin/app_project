@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TripSplit - イベント一覧</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f7f6f5;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .headline-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .ios-card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#964300",
+                        "on-primary": "#fff0e9",
+                        "secondary": "#226469",
+                        "on-secondary": "#cdfbff",
+                        "surface": "#f7f6f5",
+                        "on-surface": "#2e2f2f",
+                        "on-surface-variant": "#5b5c5b",
+                        "surface-container-low": "#f1f1f0",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#f9873e",
+                        "secondary-container": "#afedf3",
+                        "on-secondary-container": "#145a5f",
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface max-w-[393px] mx-auto min-h-screen relative flex flex-col overflow-x-hidden">
+<!-- Top Navigation Shell (Redesigned to match SCREEN_5) -->
+<header class="bg-gradient-to-r from-orange-800 to-orange-400 text-white font-['Plus_Jakarta_Sans'] font-bold tracking-tight fixed top-0 z-50 w-full max-w-[393px] rounded-b-[3rem] shadow-[0_20px_40px_-15px_rgba(150,67,0,0.3)]">
+<div class="flex justify-center items-center w-full px-6 py-4 relative">
+<h1 class="text-2xl font-extrabold tracking-tighter italic">TripSplit</h1>
+</div>
+</header>
+<!-- Hero Content Header (Redesigned to match SCREEN_5 style) -->
+<header class="pt-32 pb-12 px-8 bg-gradient-to-br from-orange-600 via-orange-400 to-[#afedf3] relative overflow-hidden -mt-8">
+<!-- Abstract Travel Shapes -->
+<div class="absolute top-10 right-[-5%] w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-80 h-80 bg-secondary/20 rounded-full blur-3xl"></div>
+<div class="relative z-10">
+<h2 class="headline-font text-3xl font-extrabold text-white leading-tight">イベント一覧</h2>
+<p class="text-white/80 mt-2 font-medium">楽しい旅の思い出と精算を管理</p>
+</div>
+<!-- Floating Element -->
+<div class="absolute right-8 bottom-8 opacity-40 rotate-12">
+<span class="material-symbols-outlined text-white text-6xl">flight_takeoff</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-6 -mt-8 relative z-20 pb-32">
+<!-- Tabs Area (Styled like inputs in SCREEN_5) -->
+<div class="bg-surface-container-lowest p-2 rounded-xl ios-card-shadow flex items-center mb-8">
+<button class="flex-1 bg-gradient-to-r from-orange-600 to-orange-400 text-white font-headline font-bold text-xs py-2.5 rounded-lg shadow-sm transition-all">
+            作成したイベント
+        </button>
+<button class="flex-1 text-on-surface-variant font-headline font-medium text-xs py-2.5 rounded-lg hover:bg-surface-container-low transition-all">
+            参加中のイベント
+        </button>
+</div>
+<!-- Event Cards List (Redesigned to flat white with subtle shadow) -->
+<div class="space-y-4">
+<!-- Event Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 ios-card-shadow transition-transform active:scale-[0.98]">
+<div class="flex justify-between items-start mb-3">
+<h3 class="headline-font font-bold text-lg text-on-surface leading-tight">沖縄卒業旅行 2024</h3>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-lg">calendar_today</span>
+<span class="text-sm font-medium">2024/03/10 - 2024/03/15</span>
+</div>
+<div class="flex items-center gap-1 bg-secondary-container px-3 py-1 rounded-full text-on-secondary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-xs font-bold">4</span>
+</div>
+</div>
+</div>
+<!-- Event Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 ios-card-shadow transition-transform active:scale-[0.98]">
+<div class="flex justify-between items-start mb-3">
+<h3 class="headline-font font-bold text-lg text-on-surface leading-tight">週末キャンプ・長野</h3>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-lg">calendar_today</span>
+<span class="text-sm font-medium">2024/04/20 - 2024/04/21</span>
+</div>
+<div class="flex items-center gap-1 bg-secondary-container px-3 py-1 rounded-full text-on-secondary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-xs font-bold">6</span>
+</div>
+</div>
+</div>
+<!-- Event Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 ios-card-shadow transition-transform active:scale-[0.98]">
+<div class="flex justify-between items-start mb-3">
+<h3 class="headline-font font-bold text-lg text-on-surface leading-tight">北海道グルメツアー</h3>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-lg">calendar_today</span>
+<span class="text-sm font-medium">2024/05/02 - 2024/05/05</span>
+</div>
+<div class="flex items-center gap-1 bg-secondary-container px-3 py-1 rounded-full text-on-secondary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-xs font-bold">3</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Exact match from SCREEN_5) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex items-center px-4 bg-white/90 backdrop-blur-xl border-t border-stone-200 pb-2 h-20 justify-between max-w-[393px] mx-auto">
+<a class="flex flex-col items-center justify-center text-[#964300] py-2 flex-1" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-tight mt-1">イベント一覧</span>
+</a>
+<div class="flex-1 flex flex-col items-center justify-center">
+<button class="bg-gradient-to-r from-[#00bcd4] to-[#2196f3] w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center justify-center text-stone-500 py-2 flex-1" href="#">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-tight mt-1">設定</span>
+</a>
+</nav>
+<!-- Background Pattern (From SCREEN_5) -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[-1]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBTPcO4TxPRnIyxEzMVALmXjAgSt10qdtnsTyfge0rCbscLDx0R8ZfH1Gk5eSWK_rQYfa8LIsuKmXAHCR68iS5CtSF9sFxYXYnBemNT2oAWjrfKkTJDkHBN7w0j-xJbbJaEEYcQgVtt1JNYYIty4SQEvWxy4jk6IkebDE3ttmnxNFoDL7gfL0HdO1gt32X8ewG6HhET0he4PLel4yftKC66W9Bn7_Obt3yCIP94l-kRWQwhGXTiGT21NGSucQU-0Z4SW-Y5fbl-nA');"></div>
+</body></html>

@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 export default function HomeStack() {
   return (
-    <Stack.Navigator initialRouteName="EventList">
+    <Stack.Navigator id="HomeStack" initialRouteName="EventList">
       <Stack.Screen name="EventList" component={EventListScreen} />
       <Stack.Screen name="EventDetail" component={EventDetailScreen} />
       <Stack.Screen name="EventEdit" component={EventEditScreen} />

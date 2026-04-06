@@ -76,9 +76,11 @@ def api_events():
                         .order_by(Events.created_at.desc()).all())
 
         return jsonify({"success": True, "created_events": [e.to_dict() for e in created_events], "joined_events": [e.to_dict() for e in joined_events]})
+
 #APIイベント詳細・編集・削除ルート
 @api.route('/api/events/<int:event_id>', methods=['GET', 'PUT', 'DELETE'])
 def api_event_detail(event_id):
+
     events = Events.query.get_or_404(event_id)
 
     if request.method == 'GET':
@@ -128,10 +130,12 @@ def api_event_detail(event_id):
             return jsonify({"success": False, "error": "不正な値です"}), 400
         if start_date > end_date:
             return jsonify({"success": False, "error": "日付が不正です"}), 400
+    
 
         events.event_name = event_name
         events.start_date = start_date
         events.end_date = end_date
+
         db.session.commit()
         return jsonify({"success": True, "event": events.to_dict()})
 

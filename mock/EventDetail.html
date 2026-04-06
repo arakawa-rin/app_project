@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-variant": "#dcdddc",
+              "surface-tint": "#964300",
+              "on-secondary": "#cdfbff",
+              "on-error-container": "#520c00",
+              "secondary": "#226469",
+              "surface-dim": "#d4d4d4",
+              "on-primary-fixed-variant": "#542200",
+              "on-surface": "#2e2f2f",
+              "error": "#b02500",
+              "primary-container": "#f9873e",
+              "surface-bright": "#f7f6f5",
+              "background": "#f7f6f5",
+              "inverse-surface": "#0d0e0e",
+              "tertiary-dim": "#424f70",
+              "surface": "#f7f6f5",
+              "secondary-container": "#afedf3",
+              "on-surface-variant": "#5b5c5b",
+              "on-secondary-fixed": "#00474b",
+              "surface-container-low": "#f1f1f0",
+              "primary-dim": "#843a00",
+              "tertiary-fixed": "#c9d6fe",
+              "error-dim": "#b92902",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-high": "#e2e2e1",
+              "primary-fixed-dim": "#e97b32",
+              "on-tertiary": "#f0f2ff",
+              "on-primary-fixed": "#100300",
+              "outline": "#767776",
+              "tertiary-container": "#c9d6fe",
+              "on-secondary-container": "#145a5f",
+              "outline-variant": "#adadac",
+              "inverse-primary": "#f9873e",
+              "surface-container-highest": "#dcdddc",
+              "secondary-dim": "#11585d",
+              "on-background": "#2e2f2f",
+              "inverse-on-surface": "#9d9d9c",
+              "on-error": "#ffefec",
+              "tertiary-fixed-dim": "#bbc9f0",
+              "on-tertiary-fixed-variant": "#475475",
+              "surface-container": "#e8e8e7",
+              "on-tertiary-fixed": "#2a3757",
+              "tertiary": "#4e5b7d",
+              "on-primary": "#fff0e9",
+              "error-container": "#f95630",
+              "primary-fixed": "#f9873e",
+              "secondary-fixed-dim": "#a1dfe5",
+              "on-secondary-fixed-variant": "#226469",
+              "secondary-fixed": "#afedf3",
+              "on-primary-container": "#451b00",
+              "primary": "#964300",
+              "on-tertiary-container": "#3d4a6b"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 left-0 w-full z-50 flex flex-col items-center bg-gradient-to-br from-orange-600 via-orange-400 to-[#afedf3] text-white font-['Plus_Jakarta_Sans'] font-bold tracking-tight rounded-b-[3rem] px-6 pt-8 pb-8 shadow-xl shadow-orange-900/10 overflow-hidden">
+<div class="absolute -top-10 -right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 left-0 -translate-y-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent rotate-[-15deg] pointer-events-none"></div>
+<div class="absolute top-1/4 right-10 opacity-10 pointer-events-none"><span class="material-symbols-outlined text-[120px] rotate-[35deg]">flight</span></div>
+<div class="flex items-center justify-between w-full mb-4">
+<button class="hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-white" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-2xl font-extrabold tracking-tighter italic text-white">TripSplit</h1>
+</div>
+<div class="text-center">
+<h1 class="text-2xl font-extrabold mb-1"><div class="flex items-center justify-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">沖縄卒業旅行 2024 <span class="material-symbols-outlined text-lg opacity-80" data-icon="edit">edit</span></div></h1>
+<p class="text-white/80 text-sm font-medium">2024/03/10 - 2024/03/15</p>
+</div>
+</header>
+<main class="px-6 mt-48 space-y-6">
+<!-- Invite & Participants Row -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center -space-x-3 overflow-hidden px-2">
+<div class="w-10 h-10 rounded-full border-2 border-white bg-secondary flex items-center justify-center text-white text-xs font-bold">健</div>
+<div class="w-10 h-10 rounded-full border-2 border-white bg-secondary-fixed-dim flex items-center justify-center text-secondary text-xs font-bold">美</div>
+<div class="w-10 h-10 rounded-full border-2 border-white bg-secondary-container flex items-center justify-center text-on-secondary-container text-xs font-bold">直</div>
+<div class="w-10 h-10 rounded-full border-2 border-white bg-secondary-dim flex items-center justify-center text-white text-xs font-bold">裕</div>
+<div class="w-10 h-10 rounded-full border-2 border-white bg-surface-container-high flex items-center justify-center text-on-surface-variant text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+</div>
+</div><div class="flex items-center justify-between bg-surface-container-lowest rounded-full py-2 px-6 shadow-sm">
+<span class="text-xs font-headline font-bold text-on-surface-variant tracking-wider">招待コード: ABC123</span>
+<button class="text-primary hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-sm" data-icon="content_copy">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Summary Grid (Editorial Layout) -->
+<section class="grid grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.04)] flex flex-col items-center">
+<span class="text-[10px] font-headline font-bold text-on-surface-variant uppercase tracking-widest mb-1">Total</span>
+<span class="text-secondary font-headline font-extrabold text-lg">¥48,500</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.04)] flex flex-col items-center">
+<span class="text-[10px] font-headline font-bold text-on-surface-variant uppercase tracking-widest mb-1">Members</span>
+<span class="text-secondary font-headline font-extrabold text-lg">4人</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.04)] flex flex-col items-center">
+<span class="text-[10px] font-headline font-bold text-on-surface-variant uppercase tracking-widest mb-1">Items</span>
+<span class="text-secondary font-headline font-extrabold text-lg">12件</span>
+</div>
+</section>
+<!-- Primary Action -->
+<button class="w-full bg-gradient-to-r from-[#00bcd4] to-[#2196f3] text-white font-headline font-bold py-5 rounded-full shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+            支出を追加
+        </button>
+<!-- Expense List -->
+<section class="space-y-4">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<h2 class="font-headline font-bold text-on-surface text-lg">最近の支出</h2>
+<span class="material-symbols-outlined text-[18px] text-secondary cursor-pointer hover:opacity-70 transition-opacity" data-icon="edit">edit</span>
+</div>
+<div class="flex items-center gap-1 cursor-pointer text-primary hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-[18px]" data-icon="sort">sort</span>
+<span class="text-xs font-bold uppercase tracking-widest">すべて見る</span>
+</div>
+</div>
+<!-- Expense Card 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.04)] flex items-center gap-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary rounded-full my-4"></div>
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+</div>
+<div class="flex-1">
+<p class="font-headline font-bold text-on-surface">ソーキそば 昼食</p>
+<p class="text-xs text-on-surface-variant">今日 • 直樹が支払い</p>
+</div>
+<div class="text-right">
+<p class="font-headline font-extrabold text-on-surface">¥4,800</p>
+<p class="text-[10px] font-bold text-secondary uppercase">Food</p>
+</div>
+</div>
+<!-- Expense Card 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.04)] flex items-center gap-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary rounded-full my-4"></div>
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+</div>
+<div class="flex-1">
+<p class="font-headline font-bold text-on-surface">レンタカー代 (3日間)</p>
+<p class="text-xs text-on-surface-variant">昨日 • 健太が支払い</p>
+</div>
+<div class="text-right">
+<p class="font-headline font-extrabold text-on-surface">¥18,500</p>
+<p class="text-[10px] font-bold text-secondary uppercase">Transport</p>
+</div>
+</div>
+<!-- Expense Card 3 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.04)] flex items-center gap-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary rounded-full my-4"></div>
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="hotel">hotel</span>
+</div>
+<div class="flex-1">
+<p class="font-headline font-bold text-on-surface">恩納村 ホテル宿泊費</p>
+<p class="text-xs text-on-surface-variant">3/11 • 裕也が支払い</p>
+</div>
+<div class="text-right">
+<p class="font-headline font-extrabold text-on-surface">¥25,200</p>
+<p class="text-[10px] font-bold text-secondary uppercase">Stay</p>
+</div>
+</div>
+</section>
+<!-- Settlement Button -->
+<button class="w-full border-2 border-secondary text-secondary font-headline font-bold py-4 rounded-full active:bg-secondary/5 transition-colors text-sm tracking-wide">
+            精算結果を見る
+        </button>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-white border-t border-gray-100 px-10 pb-4 pt-2 flex justify-between items-center h-20 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]"><!-- Left Tab: Inactive -->
+<a class="flex flex-col items-center justify-center text-gray-400 gap-1 w-20" href="#">
+<span class="material-symbols-outlined text-[26px]">home</span>
+<span class="text-[10px] font-bold">イベント一覧</span>
+</a>
+<!-- Center Floating Button (Integrated into row) -->
+<div class="flex items-center justify-center">
+<button class="w-14 h-14 bg-gradient-to-br from-[#00bcd4] to-[#2196f3] rounded-full flex items-center justify-center text-white shadow-lg shadow-cyan-500/30 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl font-bold">add</span>
+</button>
+</div>
+<!-- Right Tab: Inactive -->
+<a class="flex flex-col items-center justify-center text-gray-400 gap-1 w-20" href="#">
+<span class="material-symbols-outlined text-[26px]">settings</span>
+<span class="text-[10px] font-bold">設定</span>
+</a></nav>
+</body></html>

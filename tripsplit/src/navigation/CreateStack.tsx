@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator<CreateStackParamList>();
 
 export default function CreateStack() {
   return (
-    <Stack.Navigator initialRouteName="EventCreate">
+    <Stack.Navigator id="CreateStack" initialRouteName="EventCreate">
       <Stack.Screen name="EventCreate" component={EventCreateScreen} />
       <Stack.Screen name="JoinEvent" component={JoinEventScreen} />
       <Stack.Screen name="JoinConfirm" component={JoinConfirmScreen} />

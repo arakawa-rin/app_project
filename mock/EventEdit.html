@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-variant": "#dcdddc",
+              "on-tertiary-fixed": "#2a3757",
+              "inverse-primary": "#f9873e",
+              "on-surface-variant": "#5b5c5b",
+              "tertiary": "#4e5b7d",
+              "primary-dim": "#843a00",
+              "background": "#f7f6f5",
+              "tertiary-container": "#c9d6fe",
+              "surface-container": "#e8e8e7",
+              "on-secondary-fixed": "#00474b",
+              "on-tertiary": "#f0f2ff",
+              "inverse-surface": "#0d0e0e",
+              "error-container": "#f95630",
+              "on-secondary-container": "#145a5f",
+              "on-error-container": "#520c00",
+              "surface-tint": "#964300",
+              "secondary-fixed-dim": "#a1dfe5",
+              "on-secondary": "#cdfbff",
+              "error": "#b02500",
+              "secondary-dim": "#11585d",
+              "on-primary-fixed-variant": "#542200",
+              "tertiary-dim": "#424f70",
+              "error-dim": "#b92902",
+              "surface-dim": "#d4d4d4",
+              "surface-container-high": "#e2e2e1",
+              "on-tertiary-fixed-variant": "#475475",
+              "secondary-container": "#afedf3",
+              "primary-fixed-dim": "#e97b32",
+              "surface-bright": "#f7f6f5",
+              "secondary-fixed": "#afedf3",
+              "tertiary-fixed": "#c9d6fe",
+              "inverse-on-surface": "#9d9d9c",
+              "on-background": "#2e2f2f",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-highest": "#dcdddc",
+              "primary-container": "#f9873e",
+              "on-surface": "#2e2f2f",
+              "primary": "#964300",
+              "on-primary-container": "#451b00",
+              "secondary": "#226469",
+              "tertiary-fixed-dim": "#bbc9f0",
+              "on-primary-fixed": "#100300",
+              "on-primary": "#fff0e9",
+              "on-tertiary-container": "#3d4a6b",
+              "on-error": "#ffefec",
+              "on-secondary-fixed-variant": "#226469",
+              "surface-container-low": "#f1f1f0",
+              "outline-variant": "#adadac",
+              "outline": "#767776",
+              "surface": "#f7f6f5",
+              "primary-fixed": "#f9873e"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .horizon-gradient {
+            background: linear-gradient(135deg, #964300 0%, #f9873e 50%, #226469 100%);
+        }
+        .save-gradient {
+            background: linear-gradient(135deg, #00bcd4 0%, #2196f3 100%);
+        }
+        .airplane-trail {
+            background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.2) 0%, transparent 70%);
+            mask-image: linear-gradient(to right, transparent, black, transparent);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen pb-32">
+<!-- Top AppBar (Editorial Style) -->
+<header class="relative overflow-hidden h-64 flex flex-col items-center justify-center px-7 text-white bg-gradient-to-br from-orange-600 via-orange-400 to-secondary-container">
+<!-- Logo -->
+<div class="absolute top-6 left-0 right-0 flex justify-center">
+<span class="text-xl font-extrabold italic tracking-tighter font-headline">TripSplit</span>
+</div>
+<!-- Back Button -->
+<button class="absolute top-6 left-7 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-white">arrow_back</span>
+</button>
+<!-- More Button -->
+<button class="absolute top-6 right-7 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-white">more_vert</span>
+</button>
+<!-- Airplane Trail Decoration -->
+<div class="absolute inset-0 airplane-trail pointer-events-none opacity-40 transform -rotate-12 translate-y-10"></div>
+<!-- Headline -->
+<div class="z-10 text-center mt-8">
+<h1 class="font-headline font-bold text-3xl tracking-tight mb-1">イベントを編集</h1>
+<p class="font-headline font-medium opacity-90 text-sm">沖縄卒業旅行 2024</p>
+</div>
+</header>
+<!-- Content Canvas -->
+<main class="-mt-12 px-5 relative z-20">
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_20px_40px_-15px_rgba(46,47,47,0.08)] p-8 space-y-8">
+<!-- Event Name Field -->
+<div class="space-y-2">
+<label class="font-headline font-bold text-[10px] uppercase tracking-widest text-secondary ml-1">イベント名</label>
+<div class="bg-surface-container-high rounded-lg p-4 flex items-center transition-all focus-within:bg-white focus-within:ring-2 focus-within:ring-secondary/20">
+<span class="material-symbols-outlined text-secondary mr-3" data-icon="travel_explore">travel_explore</span>
+<input class="bg-transparent border-none p-0 w-full font-headline font-semibold text-on-surface focus:ring-0 placeholder-outline" placeholder="旅行の名称を入力" type="text" value="沖縄卒業旅行 2024"/>
+</div>
+</div>
+<!-- Date Range Section (Asymmetric Grid) -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-headline font-bold text-[10px] uppercase tracking-widest text-secondary ml-1">開始日</label>
+<div class="bg-surface-container-high rounded-lg p-4 flex items-center focus-within:bg-white transition-all">
+<span class="material-symbols-outlined text-tertiary mr-2 text-sm" data-icon="calendar_today">calendar_today</span>
+<input class="bg-transparent border-none p-0 w-full font-body font-medium text-sm focus:ring-0" type="text" value="2024/03/10"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-headline font-bold text-[10px] uppercase tracking-widest text-secondary ml-1">終了日</label>
+<div class="bg-surface-container-high rounded-lg p-4 flex items-center focus-within:bg-white transition-all">
+<span class="material-symbols-outlined text-tertiary mr-2 text-sm" data-icon="event">event</span>
+<input class="bg-transparent border-none p-0 w-full font-body font-medium text-sm focus:ring-0" type="text" value="2024/03/15"/>
+</div>
+</div>
+</div>
+<!-- Creator Field -->
+<div class="space-y-2">
+<label class="font-headline font-bold text-[10px] uppercase tracking-widest text-secondary ml-1">作成者</label>
+<div class="bg-surface-container-high rounded-lg p-4 flex items-center focus-within:bg-white transition-all">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center mr-3">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="person">person</span>
+</div>
+<input class="bg-transparent border-none p-0 w-full font-headline font-semibold text-on-surface focus:ring-0" type="text" value="健太"/>
+</div>
+</div>
+<!-- Manage Participants Section -->
+<div class="space-y-4">
+<div class="flex items-center justify-between ml-1">
+<label class="font-headline font-bold text-[10px] uppercase tracking-widest text-secondary">参加者の管理</label>
+<button class="text-secondary flex items-center gap-1 active:opacity-60 transition-opacity">
+<span class="material-symbols-outlined text-sm">person_add</span>
+<span class="text-[10px] font-bold">追加</span>
+</button>
+</div>
+<div class="space-y-3">
+<!-- Participant Row -->
+<div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between group">
+<div class="flex items-center gap-3 flex-1">
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-sm">person</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-headline font-semibold text-on-surface">美咲</span>
+<button class="material-symbols-outlined text-outline text-sm transition-opacity">edit</button>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center text-error hover:bg-error/10 rounded-full transition-colors active:scale-90">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+<!-- Participant Row -->
+<div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between group">
+<div class="flex items-center gap-3 flex-1">
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-sm">person</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-headline font-semibold text-on-surface">拓也</span>
+<button class="material-symbols-outlined text-outline text-sm transition-opacity">edit</button>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center text-error hover:bg-error/10 rounded-full transition-colors active:scale-90">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+<!-- Participant Row -->
+<div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between group">
+<div class="flex items-center gap-3 flex-1">
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-sm">person</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-headline font-semibold text-on-surface">はるか</span>
+<button class="material-symbols-outlined text-outline text-sm transition-opacity">edit</button>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center text-error hover:bg-error/10 rounded-full transition-colors active:scale-90">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Status Indicator (Design System Signature) -->
+<div class="flex items-center p-4 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-secondary mr-3" data-icon="info">info</span>
+<p class="text-xs font-body text-on-surface-variant leading-relaxed">
+                    イベント情報を変更すると、共有されているすべてのメンバーに通知されます。
+                </p>
+</div>
+<!-- Primary Action -->
+<button class="w-full save-gradient text-white font-headline font-bold py-5 rounded-full shadow-lg shadow-blue-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span>変更を保存</span>
+<span class="material-symbols-outlined text-sm" data-icon="done_all">done_all</span>
+</button>
+</div>
+<!-- Destructive Action -->
+<div class="mt-10 flex flex-col items-center">
+<button class="text-error font-headline font-bold text-sm underline underline-offset-8 active:opacity-60 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="delete">delete</span>
+<span>このイベントを削除</span>
+</button>
+<p class="mt-4 text-[10px] text-outline text-center px-10">
+                削除されたデータは復元できません。精算が完了しているかご確認ください。
+            </p>
+</div>
+</main>
+<!-- Navigation Shell (The Travel Rail) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex items-center px-4 bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl border-t border-stone-200 dark:border-stone-800 pb-2 h-20 justify-between"><a class="flex flex-col items-center justify-center text-[#964300] py-2 flex-1" href="#"><span class="material-symbols-outlined text-2xl" data-icon="home">home</span><span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-tight mt-1">イベント一覧</span></a><div class="flex-1 flex flex-col items-center justify-center"><button class="bg-gradient-to-r from-[#00bcd4] to-[#2196f3] w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform"><span class="material-symbols-outlined text-2xl" data-icon="add">add</span></button></div><a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 py-2 flex-1" href="#"><span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span><span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-tight mt-1">設定</span></a></nav>
+<!-- Background Decoration (Abstract gradients for depth) -->
+<div class="fixed top-0 right-0 -z-10 w-64 h-64 bg-secondary-container/20 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="fixed bottom-0 left-0 -z-10 w-96 h-96 bg-primary-container/10 rounded-full blur-[120px] pointer-events-none"></div>
+</body></html>

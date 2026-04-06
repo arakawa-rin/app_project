@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TripSplit - Participant Selection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface": "#2e2f2f",
+              "primary-fixed": "#f9873e",
+              "error-dim": "#b92902",
+              "on-primary-fixed-variant": "#542200",
+              "surface-variant": "#dcdddc",
+              "surface-container-high": "#e2e2e1",
+              "surface-dim": "#d4d4d4",
+              "inverse-surface": "#0d0e0e",
+              "tertiary-container": "#c9d6fe",
+              "surface-bright": "#f7f6f5",
+              "tertiary-dim": "#424f70",
+              "surface-tint": "#964300",
+              "on-tertiary-fixed-variant": "#475475",
+              "on-primary": "#fff0e9",
+              "inverse-primary": "#f9873e",
+              "tertiary": "#4e5b7d",
+              "primary-dim": "#843a00",
+              "on-tertiary-fixed": "#2a3757",
+              "secondary-dim": "#11585d",
+              "on-error": "#ffefec",
+              "on-primary-container": "#451b00",
+              "background": "#f7f6f5",
+              "surface-container-highest": "#dcdddc",
+              "secondary-container": "#afedf3",
+              "primary-container": "#f9873e",
+              "outline": "#767776",
+              "tertiary-fixed": "#c9d6fe",
+              "on-tertiary-container": "#3d4a6b",
+              "on-secondary-fixed": "#00474b",
+              "error-container": "#f95630",
+              "secondary-fixed-dim": "#a1dfe5",
+              "on-secondary-container": "#145a5f",
+              "on-error-container": "#520c00",
+              "on-secondary": "#cdfbff",
+              "on-tertiary": "#f0f2ff",
+              "surface-container": "#e8e8e7",
+              "on-primary-fixed": "#100300",
+              "outline-variant": "#adadac",
+              "inverse-on-surface": "#9d9d9c",
+              "error": "#b02500",
+              "secondary-fixed": "#afedf3",
+              "on-secondary-fixed-variant": "#226469",
+              "on-background": "#2e2f2f",
+              "tertiary-fixed-dim": "#bbc9f0",
+              "on-surface-variant": "#5b5c5b",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-low": "#f1f1f0",
+              "secondary": "#226469",
+              "surface": "#f7f6f5",
+              "primary": "#964300",
+              "primary-fixed-dim": "#e97b32"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-radio:checked + div {
+            border-color: #964300;
+            background-color: #fff0e9;
+        }
+        .custom-radio:checked + div .radio-circle {
+            background-color: #964300;
+            border-color: #964300;
+        }
+        .custom-radio:checked + div .radio-inner {
+            display: block;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen flex flex-col">
+<!-- Top Header -->
+<header class="bg-gradient-to-br rounded-b-[3rem] w-full px-6 py-8 shadow-xl shadow-primary/20 flex flex-col items-center relative overflow-hidden h-64 shrink-0 from-orange-600 via-orange-400 to-secondary-container"><div class="absolute top-0 left-0 p-8">
+<span class="material-symbols-outlined text-white hover:opacity-80 transition-opacity cursor-pointer text-2xl" data-icon="arrow_back">arrow_back</span>
+</div>
+<div class="absolute top-0 right-0 p-8">
+<span class="text-white font-extrabold italic tracking-tighter text-2xl">TripSplit</span>
+</div>
+<div class="w-full mt-12 z-10">
+<div class="inline-block px-4 py-1.5 mb-3 bg-white/20 backdrop-blur-md rounded-full text-white font-headline font-bold tracking-widest uppercase text-sm">
+                沖縄卒業旅行 2024
+            </div>
+<h1 class="text-white font-headline font-bold text-3xl tracking-tight">
+                あなたはどの参加者ですか？
+            </h1>
+</div>
+<!-- Decorative Element -->
+<div class="absolute -bottom-12 -left-12 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow px-7 -mt-10 mb-32 z-20">
+<div class="space-y-4">
+<!-- Participant: Kenta -->
+<label class="block relative cursor-pointer group">
+<input checked="" class="sr-only custom-radio" name="participant" type="radio"/>
+<div class="bg-surface-container-lowest rounded-lg shadow-sm group-active:scale-[0.98] transition-all flex items-center justify-between border-2 border-transparent py-3 px-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-[#00bcd4] flex items-center justify-center border-2 border-white shadow-sm text-white font-bold text-xl">健</div>
+<span class="font-headline font-bold text-lg">健太</span>
+</div>
+<div class="radio-circle w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center">
+<div class="radio-inner hidden w-3 h-3 rounded-full bg-white"></div>
+</div>
+</div>
+</label>
+<!-- Participant: Sato -->
+<label class="block relative cursor-pointer group">
+<input class="sr-only custom-radio" name="participant" type="radio"/>
+<div class="bg-surface-container-lowest rounded-lg shadow-sm group-active:scale-[0.98] transition-all flex items-center justify-between border-2 border-transparent py-3 px-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-[#00bcd4] flex items-center justify-center border-2 border-white shadow-sm text-white font-bold text-xl">さ</div>
+<span class="font-headline font-bold text-lg">さとう</span>
+</div>
+<div class="radio-circle w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center">
+<div class="radio-inner hidden w-3 h-3 rounded-full bg-white"></div>
+</div>
+</div>
+</label>
+<!-- Participant: Mizuki -->
+<label class="block relative cursor-pointer group">
+<input class="sr-only custom-radio" name="participant" type="radio"/>
+<div class="bg-surface-container-lowest rounded-lg shadow-sm group-active:scale-[0.98] transition-all flex items-center justify-between border-2 border-transparent py-3 px-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-[#00bcd4] flex items-center justify-center border-2 border-white shadow-sm text-white font-bold text-xl">み</div>
+<span class="font-headline font-bold text-lg">みずき</span>
+</div>
+<div class="radio-circle w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center">
+<div class="radio-inner hidden w-3 h-3 rounded-full bg-white"></div>
+</div>
+</div>
+</label>
+<!-- Special Card: New Participant -->
+<label class="block relative cursor-pointer group">
+<input class="sr-only custom-radio" name="participant" type="radio"/>
+<div class="bg-white/50 border-2 border-dashed border-outline-variant rounded-lg group-active:scale-[0.98] transition-all py-3 px-6">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center border-2 border-white shadow-sm">
+<span class="material-symbols-outlined text-outline text-3xl">person_add</span>
+</div>
+<span class="font-headline font-bold text-lg text-on-surface-variant">新しい参加者として参加する</span>
+</div>
+<div class="radio-circle w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center">
+<div class="radio-inner hidden w-3 h-3 rounded-full bg-white"></div>
+</div>
+</div>
+<div class="">
+<input class="w-full bg-surface-container-high/50 border-none rounded-md px-4 py-3 text-on-surface focus:ring-2 focus:ring-secondary/20 font-body placeholder:text-outline" placeholder="表示名を入力" type="text"/>
+</div>
+</div>
+</label>
+</div>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed left-0 w-full p-6 bg-gradient-to-t from-background via-background to-transparent z-30 bottom-20">
+<button class="w-full h-16 bg-gradient-to-r text-white font-headline font-extrabold text-lg rounded-full shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-3 from-[#00bcd4] to-[#2196f3] shadow-cyan-500/30">
+<span>参加を確定する</span>
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<!-- Background Decoration -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-40">
+<div class="absolute top-1/4 right-0 w-64 h-64 bg-secondary-container/30 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-0 left-0 w-80 h-80 bg-primary-container/20 rounded-full blur-[120px]"></div>
+</div>
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-white border-t border-gray-100 px-10 pb-4 pt-2 flex justify-between items-center h-20 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]"><!-- Left Tab: Inactive -->
+<a class="flex flex-col items-center justify-center text-gray-400 gap-1 w-20" href="#">
+<span class="material-symbols-outlined text-[26px]">home</span>
+<span class="text-[10px] font-bold">イベント一覧</span>
+</a>
+<!-- Center Floating Button (Integrated into row) -->
+<div class="flex items-center justify-center">
+<button class="w-14 h-14 bg-gradient-to-br from-[#00bcd4] to-[#2196f3] rounded-full flex items-center justify-center text-white shadow-lg shadow-cyan-500/30 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl font-bold">add</span>
+</button>
+</div>
+<!-- Right Tab: Inactive -->
+<a class="flex flex-col items-center justify-center text-gray-400 gap-1 w-20" href="#">
+<span class="material-symbols-outlined text-[26px]">settings</span>
+<span class="text-[10px] font-bold">設定</span>
+</a></nav></body></html>

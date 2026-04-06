@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TripSplit - イベントを作成</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f7f6f5;
+        }
+        .headline-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .ios-card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error-container": "#520c00",
+                        "outline": "#767776",
+                        "secondary-fixed-dim": "#a1dfe5",
+                        "tertiary-fixed-dim": "#bbc9f0",
+                        "error-container": "#f95630",
+                        "on-primary-fixed-variant": "#542200",
+                        "on-tertiary-container": "#3d4a6b",
+                        "surface": "#f7f6f5",
+                        "primary": "#964300",
+                        "surface-container": "#e8e8e7",
+                        "inverse-primary": "#f9873e",
+                        "on-surface": "#2e2f2f",
+                        "surface-variant": "#dcdddc",
+                        "outline-variant": "#adadac",
+                        "primary-fixed-dim": "#e97b32",
+                        "on-tertiary": "#f0f2ff",
+                        "inverse-surface": "#0d0e0e",
+                        "on-error": "#ffefec",
+                        "error-dim": "#b92902",
+                        "surface-tint": "#964300",
+                        "error": "#b02500",
+                        "surface-dim": "#d4d4d4",
+                        "surface-container-low": "#f1f1f0",
+                        "on-primary-container": "#451b00",
+                        "tertiary-container": "#c9d6fe",
+                        "on-secondary-fixed-variant": "#226469",
+                        "inverse-on-surface": "#9d9d9c",
+                        "background": "#f7f6f5",
+                        "surface-container-high": "#e2e2e1",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#dcdddc",
+                        "on-primary-fixed": "#100300",
+                        "tertiary-fixed": "#c9d6fe",
+                        "secondary": "#226469",
+                        "on-secondary-container": "#145a5f",
+                        "on-tertiary-fixed-variant": "#475475",
+                        "primary-container": "#f9873e",
+                        "on-tertiary-fixed": "#2a3757",
+                        "secondary-dim": "#11585d",
+                        "secondary-fixed": "#afedf3",
+                        "on-surface-variant": "#5b5c5b",
+                        "primary-dim": "#843a00",
+                        "tertiary": "#4e5b7d",
+                        "tertiary-dim": "#424f70",
+                        "surface-bright": "#f7f6f5",
+                        "on-secondary": "#cdfbff",
+                        "primary-fixed": "#f9873e",
+                        "on-secondary-fixed": "#00474b",
+                        "secondary-container": "#afedf3",
+                        "on-background": "#2e2f2f",
+                        "on-primary": "#fff0e9"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Be Vietnam Pro"],
+                        "label": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            min-height: max(700px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-gradient-to-r from-orange-800 to-orange-400 dark:from-orange-950 dark:to-orange-700 text-orange-50 dark:text-orange-100 font-['Plus_Jakarta_Sans'] font-bold tracking-tight docked top-0 rounded-b-[3rem] no-border tonal-shift-via-gradient shadow-[0_20px_40px_-15px_rgba(150,67,0,0.3)] z-50 w-full max-w-[393px] mx-auto overflow-hidden">
+<div class="flex justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-2xl" data-icon="explore">explore</span>
+</div>
+<h1 class="text-2xl font-extrabold text-white tracking-tighter italic">TripSplit</h1>
+<div class="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="person">person</span>
+</div>
+</div>
+</header>
+<main class="flex-grow">
+<!-- Immersive Hero Background -->
+<div class="h-[220px] w-full bg-gradient-to-br from-orange-600 via-orange-400 to-secondary-container relative overflow-hidden -mt-8 pt-8">
+<!-- Abstract Travel Shapes -->
+<div class="absolute top-10 right-[-5%] w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-80 h-80 bg-secondary/20 rounded-full blur-3xl"></div>
+<div class="relative z-10 px-8 pt-8 flex flex-col items-start gap-2">
+<h2 class="headline-font text-3xl font-extrabold text-white leading-tight">新しい旅の<br/>思い出を作ろう</h2>
+</div>
+<!-- Floating Elements -->
+<div class="absolute right-12 bottom-12 opacity-40 rotate-12">
+<span class="material-symbols-outlined text-white text-6xl" data-icon="flight_takeoff">flight_takeoff</span>
+</div>
+</div>
+<!-- Form Section -->
+<div class="px-6 -mt-12 pb-24 relative z-20">
+<div class="space-y-4">
+<!-- Event Name Card -->
+<div class="bg-surface-container-lowest rounded-xl p-5 ios-card-shadow">
+<label class="block text-on-surface-variant headline-font text-[10px] font-bold tracking-widest uppercase mb-2">イベント名</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary" data-icon="luggage">luggage</span>
+<input class="w-full bg-surface-container-high border-none rounded-lg pl-12 pr-4 py-3 text-on-surface font-medium focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all" placeholder="例: 沖縄卒業旅行 2024" type="text"/>
+</div>
+</div>
+<!-- Dates Grid -->
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-lowest rounded-xl p-4 ios-card-shadow">
+<label class="block text-on-surface-variant headline-font text-[10px] font-bold tracking-widest uppercase mb-2">開始日</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-lg" data-icon="calendar_today">calendar_today</span>
+<input class="w-full bg-surface-container-high border-none rounded-lg pl-10 pr-2 py-2 text-xs font-medium focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="yyyy/mm/dd" type="date"/>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-4 ios-card-shadow">
+<label class="block text-on-surface-variant headline-font text-[10px] font-bold tracking-widest uppercase mb-2">終了日</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-lg" data-icon="event">event</span>
+<input class="w-full bg-surface-container-high border-none rounded-lg pl-10 pr-2 py-2 text-xs font-medium focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="yyyy/mm/dd" type="date"/>
+</div>
+</div>
+</div>
+<!-- Host Info Card -->
+<div class="bg-surface-container-lowest rounded-xl p-5 ios-card-shadow">
+<label class="block text-on-surface-variant headline-font text-[10px] font-bold tracking-widest uppercase mb-2">主催者の名前</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-tertiary" data-icon="badge">badge</span>
+<input class="w-full bg-surface-container-high border-none rounded-lg pl-12 pr-4 py-3 text-on-surface font-medium focus:ring-2 focus:ring-tertiary/20 transition-all" placeholder="あなたの名前" type="text"/>
+</div>
+</div>
+<!-- Participants Section -->
+<div class="bg-surface-container-lowest rounded-xl p-5 ios-card-shadow">
+<div class="flex justify-between items-center mb-4">
+<label class="block text-on-surface-variant headline-font text-[10px] font-bold tracking-widest uppercase">他の参加者の数</label>
+<div class="flex items-center gap-3 bg-secondary-container px-3 py-1 rounded-full">
+<button class="material-symbols-outlined text-secondary font-bold text-sm" data-icon="remove">remove</button>
+<span class="headline-font font-bold text-on-secondary-container text-sm">2</span>
+<button class="material-symbols-outlined text-secondary font-bold text-sm" data-icon="add">add</button>
+</div>
+</div>
+<div class="space-y-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-lg" data-icon="person">person</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-11 pr-4 py-2 text-sm text-on-surface focus:ring-1 focus:ring-secondary/20 transition-all" placeholder="参加者 1" type="text"/>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-lg" data-icon="person">person</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-11 pr-4 py-2 text-sm text-on-surface focus:ring-1 focus:ring-secondary/20 transition-all" placeholder="参加者 2" type="text"/>
+</div>
+</div>
+</div>
+<!-- CTA Button -->
+<div class="pt-2 flex justify-center"><button class="w-3/4 py-3 rounded-full border-2 border-[#00bcd4] bg-white text-[#00bcd4] headline-font font-bold text-base flex items-center justify-center gap-2 active:scale-95 transition-all duration-300">
+<span>招待コードで参加</span>
+<span class="material-symbols-outlined text-lg" data-icon="group_add">group_add</span>
+</button></div><div class="mt-2 flex justify-center mb-12"><button class="w-full py-4 rounded-full bg-gradient-to-r from-[#00bcd4] to-[#2196f3] text-white headline-font font-extrabold text-lg flex items-center justify-center gap-3 group active:scale-95 transition-all duration-300 shadow-[0_10px_30px_-5px_rgba(33,150,243,0.5)]">
+<span>イベントを作成</span>
+<span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform" data-icon="airplanemode_active">airplanemode_active</span>
+</button></div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex items-center px-4 bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl border-t border-stone-200 dark:border-stone-800 pb-2 h-20 justify-between">
+<a class="flex flex-col items-center justify-center text-[#964300] py-2 flex-1" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="home">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-tight mt-1">イベント一覧</span>
+</a>
+<div class="flex-1 flex flex-col items-center justify-center">
+<button class="bg-gradient-to-r from-[#00bcd4] to-[#2196f3] w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 py-2 flex-1" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-tight mt-1">設定</span>
+</a>
+</nav>
+<!-- Background Pattern -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[-1]" data-alt="Subtle geometric travel pattern overlay" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBTPcO4TxPRnIyxEzMVALmXjAgSt10qdtnsTyfge0rCbscLDx0R8ZfH1Gk5eSWK_rQYfa8LIsuKmXAHCR68iS5CtSF9sFxYXYnBemNT2oAWjrfKkTJDkHBN7w0j-xJbbJaEEYcQgVtt1JNYYIty4SQEvWxy4jk6IkebDE3ttmnxNFoDL7gfL0HdO1gt32X8ewG6HhET0he4PLel4yftKC66W9Bn7_Obt3yCIP94l-kRWQwhGXTiGT21NGSucQU-0Z4SW-Y5fbl-nA');"></div>
+</body></html>

@@ -12,15 +12,9 @@ load_dotenv()
 
 app = Flask(__name__)
 
-def normalize_database_url(raw_uri):
-    if not raw_uri:
-        raise RuntimeError("DATABASE_URL or URI is not set.")
-    if raw_uri.startswith("postgres://"):
-        return raw_uri.replace("postgres://", "postgresql://", 1)
-    return raw_uri
 
 
-uri = normalize_database_url(os.getenv("URI") or os.getenv("DATABASE_URL"))
+uri =  os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_DATABASE_URI"] = uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 

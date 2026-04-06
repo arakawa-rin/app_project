@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TripSplit - 精算結果</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-container": "#c9d6fe",
+              "inverse-primary": "#f9873e",
+              "error-container": "#f95630",
+              "on-tertiary-container": "#3d4a6b",
+              "secondary": "#226469",
+              "primary-dim": "#843a00",
+              "on-tertiary-fixed-variant": "#475475",
+              "surface": "#f7f6f5",
+              "error-dim": "#b92902",
+              "primary-fixed-dim": "#e97b32",
+              "on-secondary-fixed-variant": "#226469",
+              "on-surface-variant": "#5b5c5b",
+              "surface-variant": "#dcdddc",
+              "on-secondary-fixed": "#00474b",
+              "secondary-dim": "#11585d",
+              "on-background": "#2e2f2f",
+              "tertiary-fixed": "#c9d6fe",
+              "primary": "#964300",
+              "on-secondary-container": "#145a5f",
+              "secondary-fixed": "#afedf3",
+              "tertiary": "#4e5b7d",
+              "on-primary-fixed-variant": "#542200",
+              "on-primary": "#fff0e9",
+              "surface-dim": "#d4d4d4",
+              "tertiary-fixed-dim": "#bbc9f0",
+              "inverse-surface": "#0d0e0e",
+              "secondary-container": "#afedf3",
+              "on-secondary": "#cdfbff",
+              "outline": "#767776",
+              "on-tertiary": "#f0f2ff",
+              "surface-container-highest": "#dcdddc",
+              "background": "#f7f6f5",
+              "primary-container": "#f9873e",
+              "surface-tint": "#964300",
+              "on-tertiary-fixed": "#2a3757",
+              "surface-container-low": "#f1f1f0",
+              "on-error-container": "#520c00",
+              "primary-fixed": "#f9873e",
+              "outline-variant": "#adadac",
+              "on-surface": "#2e2f2f",
+              "on-error": "#ffefec",
+              "error": "#b02500",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#e8e8e7",
+              "secondary-fixed-dim": "#a1dfe5",
+              "on-primary-container": "#451b00",
+              "inverse-on-surface": "#9d9d9c",
+              "on-primary-fixed": "#100300",
+              "surface-container-high": "#e2e2e1",
+              "surface-bright": "#f7f6f5",
+              "tertiary-dim": "#424f70"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        background-color: #f7f6f5;
+      }
+      .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="text-on-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky z-40 bg-gradient-to-br from-orange-600 via-orange-400 to-secondary-container p-6 pb-14 rounded-none shadow-none">
+<div class="max-w-xl mx-auto">
+<div class="flex justify-between items-start mb-4">
+<button class="active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-primary text-3xl">arrow_back</span>
+</button>
+<span class="font-headline italic font-extrabold text-on-primary text-xl tracking-tighter">TripSplit</span>
+</div>
+<h1 class="font-headline font-bold text-3xl text-on-primary mb-1">精算結果</h1>
+<p class="font-headline font-medium text-on-primary/80 text-sm tracking-wide">沖縄卒業旅行 2024</p>
+</div>
+</header>
+<main class="max-w-xl mx-auto px-5 -mt-10 relative z-50">
+<!-- Participant Balance Cards Section - Consolidated -->
+<section class="space-y-4 mb-10">
+<div class="bg-white rounded-2xl overflow-hidden shadow-xl">
+<!-- Row 1: Kenta -->
+<div class="p-5 border-b border-surface-container">
+<div class="flex justify-between items-center mb-4">
+<span class="font-headline font-extrabold text-lg text-on-surface">健太</span>
+<span class="font-headline font-bold text-xl text-[#2e7d32]">+¥12,500</span>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-xs mb-1">立替金額</span>
+<span class="font-bold font-headline text-on-surface">¥45,000</span>
+</div>
+<div class="flex flex-col border-l border-surface-container pl-4">
+<span class="text-on-surface-variant text-xs mb-1">支払額</span>
+<span class="font-bold font-headline text-on-surface">¥32,500</span>
+</div>
+</div>
+</div>
+<!-- Row 2: Sato -->
+<div class="p-5 border-b border-surface-container">
+<div class="flex justify-between items-center mb-4">
+<span class="font-headline font-extrabold text-lg text-on-surface">さとう</span>
+<span class="font-headline font-bold text-xl text-error">-¥5,200</span>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-xs mb-1">立替金額</span>
+<span class="font-bold font-headline text-on-surface">¥27,300</span>
+</div>
+<div class="flex flex-col border-l border-surface-container pl-4">
+<span class="text-on-surface-variant text-xs mb-1">支払額</span>
+<span class="font-bold font-headline text-on-surface">¥32,500</span>
+</div>
+</div>
+</div>
+<!-- Row 3: Mizuki -->
+<div class="p-5">
+<div class="flex justify-between items-center mb-4">
+<span class="font-headline font-extrabold text-lg text-on-surface">みずき</span>
+<span class="font-headline font-bold text-xl text-error">-¥7,300</span>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-xs mb-1">立替金額</span>
+<span class="font-bold font-headline text-on-surface">¥25,200</span>
+</div>
+<div class="flex flex-col border-l border-surface-container pl-4">
+<span class="text-on-surface-variant text-xs mb-1">支払額</span>
+<span class="font-bold font-headline text-on-surface">¥32,500</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Transfer List Section -->
+<section class="space-y-3 mb-4">
+<h2 class="font-headline font-bold text-on-surface-variant text-xs uppercase tracking-widest px-2 mb-2">送金リスト</h2>
+<div class="bg-white/50 backdrop-blur-md rounded-xl p-2 space-y-2">
+<!-- Transfer Row 1 -->
+<div class="bg-surface-container-lowest rounded-lg p-4 flex items-center justify-between shadow-sm">
+<div class="flex flex-col items-center w-24">
+<div class="w-10 h-10 rounded-full bg-surface-container mb-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">person</span>
+</div>
+<span class="font-headline text-xs font-bold">さとう</span>
+</div>
+<div class="flex-1 flex flex-col items-center">
+<span class="font-headline font-extrabold text-secondary text-lg mb-1">¥5,200</span>
+<div class="w-full flex items-center gap-2 px-4">
+<div class="h-[2px] bg-secondary-container flex-1"></div>
+<span class="material-symbols-outlined text-secondary transform translate-x-1">trending_flat</span>
+</div>
+</div>
+<div class="flex flex-col items-center w-24">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 mb-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+<span class="font-headline text-xs font-bold">健太</span>
+</div>
+</div>
+<!-- Transfer Row 2 -->
+<div class="bg-surface-container-lowest rounded-lg p-4 flex items-center justify-between shadow-sm">
+<div class="flex flex-col items-center w-24">
+<div class="w-10 h-10 rounded-full bg-surface-container mb-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">person</span>
+</div>
+<span class="font-headline text-xs font-bold">みずき</span>
+</div>
+<div class="flex-1 flex flex-col items-center">
+<span class="font-headline font-extrabold text-secondary text-lg mb-1">¥7,300</span>
+<div class="w-full flex items-center gap-2 px-4">
+<div class="h-[2px] bg-secondary-container flex-1"></div>
+<span class="material-symbols-outlined text-secondary transform translate-x-1">trending_flat</span>
+</div>
+</div>
+<div class="flex flex-col items-center w-24">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 mb-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+<span class="font-headline text-xs font-bold">健太</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex items-center px-4 bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl border-t border-stone-200 dark:border-stone-800 pb-2 h-20 justify-between">
+<a class="flex flex-col items-center justify-center text-[#964300] py-2 flex-1" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="home">home</span>
+<span class="font-headline text-[10px] font-bold uppercase tracking-tight mt-1">イベント一覧</span>
+</a>
+<div class="flex-1 flex flex-col items-center justify-center">
+<button class="bg-gradient-to-r from-[#00bcd4] to-[#2196f3] w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center justify-center text-stone-500 dark:text-stone-400 py-2 flex-1" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
+<span class="font-headline text-[10px] font-bold uppercase tracking-tight mt-1">設定</span>
+</a>
+</nav>
+<!-- Background Pattern Decoration -->
+<div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-20">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<defs>
+<radialgradient cx="50%" cy="50%" fx="50%" fy="50%" id="grad1" r="50%">
+<stop offset="0%" style="stop-color:#964300;stop-opacity:0.1"></stop>
+<stop offset="100%" style="stop-color:#f7f6f5;stop-opacity:0"></stop>
+</radialgradient>
+</defs>
+<rect fill="url(#grad1)" height="100" width="100"></rect>
+</svg>
+</div>
+</body></html>
