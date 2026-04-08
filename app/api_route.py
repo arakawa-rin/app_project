@@ -146,6 +146,54 @@ def api_event_detail(event_id):
         db.session.commit()
         return jsonify({"success": True})
 
+
+#表示名編集ルート
+@api.route('/api/events/<int:event_id>/participants/<int:event_participant_id>', methods=['GET', 'PATCH'])
+def api_participants_edit(event_id, event_participant_id):
+    if not check_participant(event_id):
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
+    if request.method == "GET":
+        participant = Event_Participants.query.filter_by(event_participant_id=event_participant_id).filter(Event_Participants.deleted_at.is_(None)).first()
+        return jsonify({"success": True, "participant": participant.to_dict()}) 
+    else:
+        data = request.get_json()
+        new_display_name = data.get('new_display_name')   
+        if not new_display_name:
+            return jsonify({"success": False, "error": "入力してください"}), 400
+
+        participant = Event_Participants.query.filter_by(event_participant_id=event_participant_id).filter(Event_Participants.deleted_at.is_(None)).first()
+
+        participant.display_name = new_display_name
+        db.session.commit()
+        return jsonify({"success": True})
+
+#参加者削除ルート
+@api.route('/api/events/<int:event_id>/participants_delete', methods=['DELETE'])
+def api_delete_participant(event_id):
+    if not check_creater(Events.query.get_or_404(event_id)):
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
+
+    if request.method == 'DELETE':
+        data = request.get_json()
+        deleted_participant_id = data.get('deleted_participant_id')
+        participant = Event_Participants.query.filter_by(event_participant_id=deleted_participant_id).filter(Event_Participants.deleted_at.is_(None)).first()
+        db.session.delete(participant)
+        db.session.commit()
+
+    return jsonify({"success": True})
+
+#退室ルート
+@api.route('/api/events/<int:event_id>/leave', methods=['POST'])
+def api_leave_event(event_id):
+    participant = check_participant(event_id)
+    if participant is None:
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
+    participant.status = 'left'
+    participant.left_at = datetime.now()
+    db.session.commit()
+
+    return jsonify({"success": True})
+
 #API支出追加ルート
 @api.route('/api/events/<int:event_id>/expenses',methods=['GET', 'POST'])
 def api_add_expense(event_id):
@@ -153,7 +201,7 @@ def api_add_expense(event_id):
         return jsonify({"success": False, "error": "Unauthorized"}), 401
     if request.method =="POST":
         event = Events.query.get_or_404(event_id)
-        participants = Event_Participants.query.filter_by(event_id=event_id).all()
+        participants = Event_Participants.query.filter_by(event_id=event_id).filter(Event_Participants.status != 'left').all()
 
         data = request.get_json()
         category_name = data.get('category_name')
