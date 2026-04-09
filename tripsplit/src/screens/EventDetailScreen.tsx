@@ -29,6 +29,8 @@ type EventDetail = {
     payer_ep_id: number;
     payer_name: string;
   }[];
+
+  my_ep_id: number | null;
 };
 
 export default function EventDetailScreen() {
@@ -126,7 +128,7 @@ export default function EventDetailScreen() {
         </Pressable>
         <Pressable
           style={styles.secondaryButton}
-          onPress={() => navigation.navigate('EventEdit', { event_id })}
+          onPress={() => navigation.navigate('EventEdit', { event_id, event_participant_id: details.my_ep_id ?? 0 })}
         >
           <Text style={styles.secondaryButtonText}>イベントを編集</Text>
         </Pressable>
