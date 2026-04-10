@@ -72,7 +72,7 @@ def api_events():
 
         created_events = (db.session.query(Events).filter(Events.created_by == user_id, Events.deleted_at.is_(None)).order_by(Events.created_at.desc()).all())
         joined_events = (db.session.query(Events).join(Event_Participants, Events.event_id == Event_Participants.event_id)
-                        .filter(Event_Participants.user_id == user_id, Events.created_by != user_id, Events.deleted_at.is_(None), Event_Participants.deleted_at.is_(None))
+                        .filter(Event_Participants.user_id == user_id, Events.created_by != user_id, Events.deleted_at.is_(None), Event_Participants.deleted_at.is_(None), Event_Participants.status != 'left')
                         .order_by(Events.created_at.desc()).all())
 
         return jsonify({"success": True, "created_events": [e.to_dict() for e in created_events], "joined_events": [e.to_dict() for e in joined_events]})
@@ -82,9 +82,10 @@ def api_events():
 def api_event_detail(event_id):
 
     events = Events.query.get_or_404(event_id)
+    my_ep = check_participant(event_id)
 
     if request.method == 'GET':
-        if not check_participant(event_id):
+        if not my_ep:
             return jsonify({"success": False, "error": "Unauthorized"}), 401
         if events.deleted_at is not None:
             return jsonify({"success": False, "error": "Event not found"}), 404
@@ -111,7 +112,7 @@ def api_event_detail(event_id):
             "payer_name": e.payer_name
         } for e in expenses_raw]
 
-        return jsonify({"success": True, "event": events.to_dict(), "participants": [p.to_dict() for p in participants], "expenses": expenses_raw_dict})
+        return jsonify({"success": True, "event": events.to_dict(), "participants": [p.to_dict() for p in participants], "expenses": expenses_raw_dict, "my_ep_id": my_ep.event_participant_id if my_ep else None})
 
     elif request.method == 'PUT':
         if not check_creater(events):

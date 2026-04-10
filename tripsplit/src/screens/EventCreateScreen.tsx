@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { CreateStackParamList } from '../navigation/types';
@@ -121,7 +121,18 @@ export default function EventCreateScreen() {
         onPress={handleSubmit}
         disabled={submitting}
       />
+      <Pressable
+        style={styles.secondaryButton}
+        onPress={() => navigation.navigate('JoinEvent')}
+      >
+      <Text style={styles.secondaryButtonText}>招待コードで参加</Text>
+      </Pressable>
+
+
     </View>
+
+
+
   );
 }
 
@@ -146,4 +157,18 @@ const styles = StyleSheet.create({
   memberName: {
     fontSize: 16,
   },
+  secondaryButton: {
+    marginTop: 16,
+    borderWidth: 1,
+    borderColor: '#1f6feb',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  secondaryButtonText: {
+    color: '#1f6feb',
+    fontSize: 16,
+    fontWeight: '700',
+    textAlign: 'center',  
+    },
 });

@@ -10,8 +10,12 @@ export type HomeStackParamList = {
 export type CreateStackParamList = {
   EventCreate: undefined;
   JoinEvent: undefined;
-  JoinConfirm: { event_id: number, invite_code: string };
+  JoinConfirm: {
+    event: { event_id: number; invite_code: string; event_name: string; start_date: string; end_date: string };
+    unlinked: { event_participant_id: number; display_name: string; status: string; user_id: number | null }[];
+  };
 };
+
 
 export type SettingsStackParamList = {
   Settings: undefined;
