@@ -1,35 +1,54 @@
-import React, { useState } from 'react';
-import { Alert, Button, StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { CreateStackParamList } from '../navigation/types';
-import { BASE_URL } from '../api/config';
+import React, { useState } from "react";
+import { Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { CreateStackParamList } from "../navigation/types";
+import EventFormScreen from "../components/EventFormScreen";
+import { BASE_URL } from "../api/config";
 
 export default function EventCreateScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<CreateStackParamList>>();
-  const [eventName, setEventName] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [memberNameInput, setMemberNameInput] = useState('');
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CreateStackParamList>>();
+  const [eventName, setEventName] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [memberNameInput, setMemberNameInput] = useState("");
   const [memberNames, setMemberNames] = useState<string[]>([]);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  function handleAddMember() {
+    const nextMemberName = memberNameInput.trim();
+
+    if (!nextMemberName) {
+      return;
+    }
+
+    setMemberNames((current) => [...current, nextMemberName]);
+    setMemberNameInput("");
+  }
+
+  function handleRemoveMember(targetIndex: number) {
+    setMemberNames((current) =>
+      current.filter((_, index) => index !== targetIndex),
+    );
+  }
 
   async function handleSubmit() {
     if (!eventName || !displayName || !startDate || !endDate) {
-      Alert.alert('入力エラー', 'すべて入力してください');
+      Alert.alert("入力エラー", "すべて入力してください");
       return;
     }
 
     setSubmitting(true);
 
     try {
-        const response = await fetch(`${BASE_URL}/api/events`, {
-        method: 'POST',
+      const response = await fetch(`${BASE_URL}/api/events`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           event_name: eventName,
           display_name: displayName,
@@ -37,138 +56,57 @@ export default function EventCreateScreen() {
           end_date: endDate,
           member_names: memberNames,
         }),
-        });
+      });
 
-        const data = await response.json();
- 
-        if (!response.ok) {
-        throw new Error(data.error || 'イベント作成に失敗しました');
-        }
+      const data = await response.json();
 
-      Alert.alert('作成完了', 'イベントを作成しました');
-      setEventName('');
-      setDisplayName('');
-      setMemberNameInput('');
+      if (!response.ok) {
+        throw new Error(data.error || "イベント作成に失敗しました");
+      }
+
+      Alert.alert("作成完了", "イベントを作成しました");
+      setEventName("");
+      setDisplayName("");
+      setMemberNameInput("");
       setMemberNames([]);
-      setStartDate('');
-      setEndDate('');
-      navigation.getParent()?.navigate('Home');
-      } 
-      
-      catch (err) {
+      setStartDate("");
+      setEndDate("");
+      navigation.getParent()?.navigate("Home");
+    } catch (err) {
       Alert.alert(
-        '通信エラー',
-        err instanceof Error ? err.message : 'イベント作成に失敗しました'
+        "通信エラー",
+        err instanceof Error ? err.message : "イベント作成に失敗しました",
       );
-    } 
-    
-    finally {
+    } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>イベント作成</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="イベント名"
-        value={eventName}
-        onChangeText={setEventName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="あなたの名前"
-        value={displayName}
-        onChangeText={setDisplayName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="参加者の名前"
-        value={memberNameInput}
-        onChangeText={setMemberNameInput}
-      />
-      <Button
-        title="参加者を追加"
-        onPress={() => {
-          if (memberNameInput.trim()) {
-            setMemberNames([...memberNames, memberNameInput.trim()]);
-            setMemberNameInput('');
-          }
-        }}
-      />
-      {memberNames.map((name, index) => (
-        <Text key={`${name}-${index}`} style={styles.memberName}>
-          {name}
-        </Text>
-      ))}
-      <TextInput
-        style={styles.input}
-        placeholder="開始日 (YYYY-MM-DD)"
-        value={startDate}
-        onChangeText={setStartDate}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="終了日 (YYYY-MM-DD)"
-        value={endDate}
-        onChangeText={setEndDate}
-        autoCapitalize="none"
-      />
-      <Button
-        title={submitting ? '送信中...' : '作成する'}
-        onPress={handleSubmit}
-        disabled={submitting}
-      />
-      <Pressable
-        style={styles.secondaryButton}
-        onPress={() => navigation.navigate('JoinEvent')}
-      >
-      <Text style={styles.secondaryButtonText}>招待コードで参加</Text>
-      </Pressable>
-
-
-    </View>
-
-
-
+    <EventFormScreen
+      heroTitle="新しい思い出を作ろう"
+      eventName={eventName}
+      onEventNameChange={setEventName}
+      displayName={displayName}
+      onDisplayNameChange={setDisplayName}
+      startDate={startDate}
+      onStartDateChange={setStartDate}
+      endDate={endDate}
+      onEndDateChange={setEndDate}
+      memberNameInput={memberNameInput}
+      onMemberNameInputChange={setMemberNameInput}
+      onAddMember={handleAddMember}
+      memberNames={memberNames}
+      onRemoveMember={handleRemoveMember}
+      primaryAction={{
+        label: submitting ? "送信中..." : "イベントを作成",
+        onPress: handleSubmit,
+        disabled: submitting,
+      }}
+      secondaryAction={{
+        label: "招待コードで参加",
+        onPress: () => navigation.navigate("JoinEvent"),
+      }}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-    gap: 12,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-  },
-  memberName: {
-    fontSize: 16,
-  },
-  secondaryButton: {
-    marginTop: 16,
-    borderWidth: 1,
-    borderColor: '#1f6feb',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  secondaryButtonText: {
-    color: '#1f6feb',
-    fontSize: 16,
-    fontWeight: '700',
-    textAlign: 'center',  
-    },
-});

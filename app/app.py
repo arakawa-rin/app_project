@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from dotenv import load_dotenv
 from sqlalchemy import func,text,Numeric
 from datetime import datetime, date, timedelta
-from decimal import Decimal, InvalidOperation,ROUND_DOWN
+from decimal import Decimal, InvalidOperation, ROUND_DOWN, ROUND_HALF_UP
 import os,random, string
 from models import db
 from models.models import Users, Events, Event_Participants, Expense_Categories, Expenses, Allocations, Settlements
@@ -450,7 +450,17 @@ def settlements(event_id):
         if total_settlement != original_credit_sum:
             return render_template('settlements.html', event=event, error="内部エラー: 精算金額の合計が債権の合計と一致しません")
         
-        return render_template('settlements.html', event=event, settlements=settlements,settlement_summary=settlement_summary,participants=participants)
+        integer_summary, integer_settlements = build_integer_settlement_result(
+            settlement_summary
+        )
+
+        return render_template(
+            'settlements.html',
+            event=event,
+            settlements=integer_settlements,
+            settlement_summary=integer_summary,
+            participants=participants,
+        )
     
 @app.route('/join_event', methods=['GET','POST'])
 def join_event():
@@ -533,6 +543,88 @@ def check_creater(event):
     if not user_id:
         return False
     return event.created_by == user_id
+
+def allocate_integer_values(values):
+    if not values:
+        return []
+
+    decimals = [Decimal(value) for value in values]
+    floored = [
+        int(value.quantize(Decimal('1'), rounding=ROUND_DOWN))
+        for value in decimals
+    ]
+    target_total = int(
+        sum(decimals, Decimal('0')).quantize(Decimal('1'), rounding=ROUND_HALF_UP)
+    )
+    diff = target_total - sum(floored)
+
+    if diff:
+        floored[-1] += diff
+
+    return floored
+
+def build_integer_settlement_result(settlement_summary):
+    integer_paid = allocate_integer_values(
+        [item["total_paid"] for item in settlement_summary]
+    )
+    integer_allocations = allocate_integer_values(
+        [item["total_allocations"] for item in settlement_summary]
+    )
+
+    integer_summary = []
+    for item, total_paid, total_allocations in zip(
+        settlement_summary,
+        integer_paid,
+        integer_allocations,
+    ):
+        integer_summary.append({
+            "event_participant_id": item["event_participant_id"],
+            "display_name": item["display_name"],
+            "total_allocations": total_allocations,
+            "total_paid": total_paid,
+            "net": total_paid - total_allocations,
+        })
+
+    balances = []
+    for item in integer_summary:
+        if item["net"] != 0:
+            balances.append({
+                "ep_id": item["event_participant_id"],
+                "display_name": item["display_name"],
+                "net": item["net"],
+            })
+
+    creditors = []
+    debtors = []
+    for balance in balances:
+        if balance["net"] > 0:
+            creditors.append(balance.copy())
+        else:
+            debtors.append(balance.copy())
+
+    creditors.sort(key=lambda x: x["net"], reverse=True)
+    debtors.sort(key=lambda x: x["net"])
+
+    integer_settlements = []
+    while creditors and debtors:
+        creditor = creditors[0]
+        debtor = debtors[0]
+        amount = min(creditor["net"], -debtor["net"])
+        integer_settlements.append({
+            "payee_display_name": creditor["display_name"],
+            "payer_display_name": debtor["display_name"],
+            "amount": amount,
+        })
+
+        creditor["net"] -= amount
+        debtor["net"] += amount
+
+        if creditor["net"] == 0:
+            creditors.pop(0)
+        if debtor["net"] == 0:
+            debtors.pop(0)
+
+    return integer_summary, integer_settlements
 
 #割り勘計算
 def create_allocations(expense_id, event_id, expense_amount, split_method, participants_ids, form):
