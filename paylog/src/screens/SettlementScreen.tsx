@@ -142,10 +142,10 @@ export default function SettlementScreen() {
         ]}
       >
         <MaterialIcons
-          name="flight"
-          size={120}
+          name="account-balance-wallet"
+          size={96}
           color="#fff"
-          style={styles.heroPlane}
+          style={styles.heroWallet}
         />
         <View style={styles.heroNav}>
           <HeroBackButton onPress={() => navigation.goBack()} />
@@ -245,12 +245,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
   },
-  heroPlane: {
+  heroWallet: {
     position: "absolute",
-    marginTop: 50,
-    right: 16,
-    opacity: 0.1,
-    transform: [{ rotate: "35deg" }],
+    top: 42,
+    right: 20,
+    opacity: 0.12,
+    transform: [{ rotate: "12deg" }],
   },
   heroNav: {
     flexDirection: "row",

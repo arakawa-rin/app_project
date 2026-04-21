@@ -53,10 +53,10 @@ export default function SettingsScreen() {
         ]}
       >
         <MaterialIcons
-          name="flight"
-          size={120}
+          name="settings"
+          size={92}
           color="#fff"
-          style={styles.heroPlane}
+          style={styles.heroGear}
         />
         <View style={styles.heroNav}>
           <Text style={[styles.heroNavText, { fontStyle: "italic" }]}>
@@ -109,12 +109,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
   },
-  heroPlane: {
+  heroGear: {
     position: "absolute",
-    marginTop: 50,
-    right: 16,
-    opacity: 0.1,
-    transform: [{ rotate: "35deg" }],
+    top: 44,
+    right: 18,
+    opacity: 0.12,
+    transform: [{ rotate: "10deg" }],
   },
   heroNav: {
     flexDirection: "row",

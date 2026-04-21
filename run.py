@@ -8,7 +8,7 @@ from app.api_route import api
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DIST_DIR = os.path.join(BASE_DIR, 'tripsplit', 'dist')
+DIST_DIR = os.path.join(BASE_DIR, 'paylog', 'dist')
 
 load_dotenv(os.path.join(BASE_DIR, 'app', '.env'))
 

@@ -109,7 +109,12 @@ export default function EventListScreen() {
           end={{ x: 0.9, y: 1.3 }}
           style={[styles.hero, { paddingTop: insets.top + 8 }]}
         >
-          <MaterialIcons name="flight" size={120} color="#fff" style={styles.heroPlane} />
+          <MaterialIcons
+            name="event"
+            size={96}
+            color="#fff"
+            style={styles.heroEventIcon}
+          />
           <View style={styles.heroNav}>
             <Text style={[styles.heroNavText, { fontStyle: "italic"}]}>Paylog</Text>
           </View>
@@ -219,12 +224,12 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     overflow: "hidden",
   },
-  heroPlane: {
+  heroEventIcon: {
     position: "absolute",
-    top: 16,
-    right: 16,
-    opacity: 0.1,
-    transform: [{ rotate: "35deg" }],
+    top: 24,
+    right: 18,
+    opacity: 0.12,
+    transform: [{ rotate: "8deg" }],
   },
   heroNav: {
     flexDirection: "row",

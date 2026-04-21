@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "tripsplit",
-    "slug": "tripsplit",
+    "name": "paylog",
+    "slug": "paylog",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
