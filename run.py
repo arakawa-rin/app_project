@@ -14,7 +14,12 @@ load_dotenv(os.path.join(BASE_DIR, 'app', '.env'))
 
 app = Flask(__name__)
 
-CORS(app, supports_credentials=True, origins=["http://localhost:8081"])
+IS_PROD = os.getenv("RENDER") == "true"
+
+# In production we serve the SPA and API from the same origin, so CORS is
+# only needed for local web development.
+if not IS_PROD:
+    CORS(app, supports_credentials=True, origins=["http://localhost:8081"])
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -23,7 +28,6 @@ db.init_app(app)
 
 app.secret_key = os.getenv("app_password") or os.getenv("SECRET_KEY") or "dev-secret-key"
 app.permanent_session_lifetime = timedelta(days=365)
-IS_PROD = os.getenv("RENDER") == "true"
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = IS_PROD
 
