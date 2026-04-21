@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify, session
 from sqlalchemy import func, or_, and_
-from datetime import datetime, timedelta
-from decimal import Decimal, InvalidOperation, ROUND_DOWN, ROUND_HALF_UP
+from datetime import datetime
+from decimal import Decimal, InvalidOperation
 import random, string
 from models import db
-from models.models import Users, Events, Event_Participants, Expense_Categories, Expenses, Allocations, Settlements
+from models.models import Events, Event_Participants, Expense_Categories, Expenses, Allocations
+from .utils import guest_create, check_participant, check_creater, build_integer_settlement_result, create_allocations
 
 api = Blueprint('api', __name__)
 
@@ -24,11 +25,13 @@ def api_events():
         # 入力チェック
         if not event_name or not start_date or not end_date or not display_name:
             return jsonify({"success": False, "error": "入力してください"}), 400
-        try:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-            end_date   = datetime.strptime(end_date,   '%Y-%m-%d').date()
-        except ValueError:
-            return jsonify({"success": False, "error": "日付が不正です"}), 400
+        
+        start_date, err = parse_date(start_date)
+        if err:
+            return jsonify({"success": False, "error": err}), 400
+        end_date, err = parse_date(end_date)
+        if err:
+            return jsonify({"success": False, "error": err}), 400
 
         # 日付チェック
         if start_date > end_date:
@@ -128,11 +131,12 @@ def api_event_detail(event_id):
 
         if not event_name or not start_date or not end_date or not display_name:
             return jsonify({"success": False, "error": "入力してください"}), 400
-        try:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-            end_date   = datetime.strptime(end_date,   '%Y-%m-%d').date()
-        except ValueError:
-            return jsonify({"success": False, "error": "不正な値です"}), 400
+        start_date, err = parse_date(start_date)
+        if err:
+            return jsonify({"success": False, "error": err}), 400
+        end_date, err = parse_date(end_date)
+        if err:
+            return jsonify({"success": False, "error": err}), 400
         if start_date > end_date:
             return jsonify({"success": False, "error": "日付が不正です"}), 400
     
@@ -161,12 +165,11 @@ def api_delete_participant(event_id):
     if not check_creater(Events.query.get_or_404(event_id)):
         return jsonify({"success": False, "error": "Unauthorized"}), 401
 
-    if request.method == 'DELETE':
-        data = request.get_json()
-        deleted_participant_id = data.get('deleted_participant_id')
-        participant = Event_Participants.query.filter_by(event_participant_id=deleted_participant_id).filter(Event_Participants.deleted_at.is_(None)).first()
-        db.session.delete(participant)
-        db.session.commit()
+    data = request.get_json()
+    deleted_participant_id = data.get('deleted_participant_id')
+    participant = Event_Participants.query.filter_by(event_participant_id=deleted_participant_id).filter(Event_Participants.deleted_at.is_(None)).first()
+    db.session.delete(participant)
+    db.session.commit()
 
     return jsonify({"success": True})
 
@@ -192,48 +195,21 @@ def api_add_expense(event_id):
         return jsonify({"success": False, "error": "Unauthorized"}), 401
     if request.method =="POST":
         event = Events.query.get_or_404(event_id)
-        participants = Event_Participants.query.filter_by(event_id=event_id).filter(Event_Participants.status != 'left').all()
 
         data = request.get_json()
-        category_name = data.get('category_name')
-        expense_amount = data.get('expense_amount')
-        payer_ep_id = data.get('payer_ep_id')
-        participants_ids = data.get('participants')
-        expense_at = data.get('expense_at')
-        description = data.get('description')
-        split_method = data.get('split_method')
+        validated, err = validate_expense_input(data, event, event_id)
+        if err:
+            return jsonify({"success": False, "error": err}), 400
 
+        category_name    = validated['category_name']
+        expense_amount   = validated['expense_amount']
+        payer_ep_id      = validated['payer_ep_id']
+        participants_ids = validated['participants_ids']
+        expense_at       = validated['expense_at']
+        description      = validated['description']
+        split_method     = validated['split_method']
 
-        if not category_name or not expense_amount or not payer_ep_id or not participants_ids or not expense_at:
-            return jsonify({"success": False, "error": "入力してください"}), 400
-        
-        category_name = category_name.strip()
-
-        try:
-            expense_at = datetime.strptime(expense_at, '%Y-%m-%d').date()
-        except ValueError:
-            return jsonify({"success": False, "error": "日付が不正です"}), 400
-
-        try:
-            expense_amount = Decimal(expense_amount)
-        except InvalidOperation:
-            return jsonify({"success": False, "error": "金額が不正です"}), 400
-        
-        if expense_amount <= 0:
-            return jsonify({"success": False, "error": "金額が不正です"}), 400
-
-        if expense_at > event.end_date:
-            return jsonify({"success": False, "error": "日付が不正です"}), 400
-
-        if not Event_Participants.query.filter_by(event_id=event_id,event_participant_id=payer_ep_id).first():
-            return jsonify({"success": False, "error": "立替人がイベント参加者ではありません"}), 400
-        
-        #カテゴリ登録・取得ブロック
-        category = Expense_Categories.query.filter_by(event_id=event_id, category_name=category_name).one_or_none()
-        if category is None:
-            category = Expense_Categories(category_name=category_name,event_id=event_id)
-            db.session.add(category)
-            db.session.flush()
+        category = get_create_category(event_id, category_name)
 
         expenses = Expenses(event_id=event_id,expense_amount=expense_amount,payer_ep_id=payer_ep_id,expense_at=expense_at, description=description, category_id=category.category_id)
         db.session.add(expenses)
@@ -265,53 +241,28 @@ def api_expense_edit(event_id, expense_id):
         categories = Expense_Categories.query.get(expenses.category_id)
         allocations = Allocations.query.filter_by(expense_id=expenses.expense_id).filter(Allocations.deleted_at.is_(None)).all()
         return jsonify({"success": True, "event": events.to_dict(), "expense": expenses.to_dict(), "participants": [p.to_dict() for p in participants], "category": categories.to_dict(), "allocations": [a.to_dict() for a in allocations]})
-    if request.method == "PUT":
+    elif request.method == "PUT":
         event = Events.query.get_or_404(event_id)
         expenses = Expenses.query.get_or_404(expense_id)
-        participants = Event_Participants.query.filter_by(event_id=event_id).filter(Event_Participants.deleted_at.is_(None)).all()
-        categories = Expense_Categories.query.get(expenses.category_id)
-        allocations = Allocations.query.filter_by(expense_id=expense_id).filter(Allocations.deleted_at.is_(None)).all()
 
         data = request.get_json()
-        category_name = data.get('category_name')
-        expense_amount = data.get('expense_amount')
-        payer_ep_id = data.get('payer_ep_id')
-        participants_ids = data.get('participants')
-        expense_at = data.get('expense_at')
-        description = data.get('description')
-        split_method = data.get('split_method')
 
-
-        if not category_name or not expense_amount or not payer_ep_id or not participants_ids or not expense_at:
-            return jsonify({"success": False, "error": "入力してください"}), 400
-
-        if split_method not in ["EQUAL","UNITS"]:
+        if data.get('split_method') not in ["EQUAL", "UNITS"]:
             return jsonify({"success": False, "error": "割り勘方式が不正です"}), 400
 
-        try:
-            expense_at = datetime.strptime(expense_at, '%Y-%m-%d').date()
-        except ValueError:
-            return jsonify({"success": False, "error": "日付が不正です"}), 400
+        validated, err = validate_expense_input(data, event, event_id)
+        if err:
+            return jsonify({"success": False, "error": err}), 400
 
-        try:
-            expense_amount = Decimal(expense_amount)
-        except InvalidOperation:
-            return jsonify({"success": False, "error": "金額が不正です"}), 400
+        category_name    = validated['category_name']
+        expense_amount   = validated['expense_amount']
+        payer_ep_id      = validated['payer_ep_id']
+        participants_ids = validated['participants_ids']
+        expense_at       = validated['expense_at']
+        description      = validated['description']
+        split_method     = validated['split_method']
 
-        if expense_amount <= 0:
-            return jsonify({"success": False, "error": "金額が不正です"}), 400
-
-        if expense_at > event.end_date:
-            return jsonify({"success": False, "error": "日付が不正です"}), 400
-
-        if not Event_Participants.query.filter_by(event_id=event_id,event_participant_id=payer_ep_id).first():
-            return jsonify({"success": False, "error": "立替人がイベント参加者ではありません"}), 400
-
-        category = Expense_Categories.query.filter_by(event_id=event_id, category_name=category_name).one_or_none()
-        if category is None:
-            category = Expense_Categories(category_name=category_name,event_id=event_id)
-            db.session.add(category)
-            db.session.flush()
+        category = get_create_category(event_id, category_name)
 
         expenses.expense_amount = expense_amount
         expenses.payer_ep_id = payer_ep_id
@@ -344,11 +295,10 @@ def api_expense_edit(event_id, expense_id):
 def api_settlements(event_id):
     if not check_participant(event_id):
         return jsonify({"success": False, "error": "Unauthorized"}), 401
-    if request.method == "GET":
-        event = Events.query.get_or_404(event_id)
-        participants = Event_Participants.query.filter_by(event_id=event_id).filter(Event_Participants.deleted_at.is_(None)).all()
+    event = Events.query.get_or_404(event_id)
+    participants = Event_Participants.query.filter_by(event_id=event_id).filter(Event_Participants.deleted_at.is_(None)).all()
 
-        allocations_row = (db.session.query(
+    allocations_row = (db.session.query(
             Allocations.event_participant_id.label("ep_id"),
             func.coalesce(func.sum(Allocations.allocation_amount), 0).label("total_allocations")
         )
@@ -358,7 +308,7 @@ def api_settlements(event_id):
         .all()
         )
 
-        expenses_row = (db.session.query(
+    expenses_row = (db.session.query(
             Expenses.payer_ep_id.label("ep_id"),
             func.coalesce(func.sum(Expenses.expense_amount), 0).label("total_paid")
         ).filter(Expenses.event_id == event_id, Expenses.deleted_at.is_(None))
@@ -366,86 +316,101 @@ def api_settlements(event_id):
         .all()
         )
 
-        allocations_dict = {row.ep_id: row.total_allocations for row in allocations_row}
-        expenses_dict = {row.ep_id: row.total_paid for row in expenses_row}
+    allocations_dict = {row.ep_id: row.total_allocations for row in allocations_row}
+    expenses_dict = {row.ep_id: row.total_paid for row in expenses_row}
 
-        settlement_summary = []
-        for p in participants:
-            ep_id = p.event_participant_id
-            total_alloc = allocations_dict.get(ep_id, Decimal('0'))
-            total_paid = expenses_dict.get(ep_id, Decimal('0'))
-            net = total_paid - total_alloc
-            settlement_summary.append({
+    settlement_summary = []
+    for p in participants:
+        ep_id = p.event_participant_id
+        total_alloc = allocations_dict.get(ep_id, Decimal('0'))
+        total_paid = expenses_dict.get(ep_id, Decimal('0'))
+        net = total_paid - total_alloc
+        settlement_summary.append({
             "event_participant_id": ep_id,
             "display_name": p.display_name,
             "total_allocations": total_alloc,
             "total_paid": total_paid,
             "net": net,
-            })
-
-        balances = []
-        for item in settlement_summary:
-            if item["net"] != Decimal('0'):
-                balances.append({
-                    "ep_id": item["event_participant_id"],
-                    "display_name": item["display_name"],
-                    "net": item["net"]
-                })
-        
-        total_balance = sum((b["net"] for b in balances), Decimal('0'))
-        if total_balance != Decimal('0'):
-            return jsonify({"success": False, "error": "内部エラー: 貸借の合計が0になっていません"}), 500
-
-        creditors = []
-        debtors = []
-        for b in balances:
-            if b["net"] > Decimal('0'):
-                creditors.append(b)
-            else:
-                debtors.append(b)
-        
-        creditors.sort(key=lambda x: x["net"], reverse=True)
-        debtors.sort(key=lambda x: x["net"])
-
-        settlements = []
-
-        original_credit_sum = sum((b["net"] for b in balances if b["net"] > Decimal('0')), Decimal('0'))
-        
-        while creditors and debtors:
-            creditor = creditors[0]
-            debtor = debtors[0]
-
-            settlement_amount = min(creditor["net"], -debtor["net"])
-            settlements.append({
-                "payee_display_name": creditor["display_name"],
-                "payer_display_name": debtor["display_name"],
-                "amount": settlement_amount
-            })
-
-            creditor["net"] -= settlement_amount
-            debtor["net"] += settlement_amount
-
-            if creditor["net"] == Decimal('0'):
-                creditors.pop(0)
-            if debtor["net"] == Decimal('0'):
-                debtors.pop(0)
-
-        if creditors or debtors:
-            return jsonify({"success": False, "error": "内部エラー: 貸借の計算に未処理があります"}), 500
-
-        total_settlement = sum((s["amount"] for s in settlements), Decimal('0'))
-        if total_settlement != original_credit_sum:
-            return jsonify({"success": False, "error": "内部エラー: 精算金額の合計が債権の合計と一致しません"}), 500
-        integer_summary, integer_settlements = build_integer_settlement_result(
-            settlement_summary
-        )
-
-        return jsonify({
-            "success": True,
-            "settlements": integer_settlements,
-            "settlement_summary": integer_summary,
-            "participants": [p.to_dict() for p in participants],
         })
+
+    balances = []
+    for item in settlement_summary:
+        if item["net"] != Decimal('0'):
+            balances.append({
+                "ep_id": item["event_participant_id"],
+                "display_name": item["display_name"],
+                "net": item["net"]
+            })
+
+    total_balance = sum((b["net"] for b in balances), Decimal('0'))
+    if total_balance != Decimal('0'):
+        return jsonify({"success": False, "error": "内部エラー: 貸借の合計が0になっていません"}), 500
+
+    creditors = []
+    debtors = []
+    for b in balances:
+        if b["net"] > Decimal('0'):
+            creditors.append(b)
+        else:
+            debtors.append(b)
+
+    creditors.sort(key=lambda x: x["net"], reverse=True)
+    debtors.sort(key=lambda x: x["net"])
+
+    settlements = []
+
+    original_credit_sum = sum((b["net"] for b in balances if b["net"] > Decimal('0')), Decimal('0'))
+
+    while creditors and debtors:
+        creditor = creditors[0]
+        debtor = debtors[0]
+
+        settlement_amount = min(creditor["net"], -debtor["net"])
+        settlements.append({
+            "payee_display_name": creditor["display_name"],
+            "payer_display_name": debtor["display_name"],
+            "amount": settlement_amount
+        })
+
+        creditor["net"] -= settlement_amount
+        debtor["net"] += settlement_amount
+
+        if creditor["net"] == Decimal('0'):
+            creditors.pop(0)
+        if debtor["net"] == Decimal('0'):
+            debtors.pop(0)
+
+    if creditors or debtors:
+        return jsonify({"success": False, "error": "内部エラー: 貸借の計算に未処理があります"}), 500
+
+    total_settlement = sum((s["amount"] for s in settlements), Decimal('0'))
+    if total_settlement != original_credit_sum:
+        return jsonify({"success": False, "error": "内部エラー: 精算金額の合計が債権の合計と一致しません"}), 500
+
+    creator_participant = Event_Participants.query.filter_by(
+        event_id=event_id,
+        user_id=event.created_by,
+    ).filter(Event_Participants.deleted_at.is_(None)).first()
+    preferred_ep_id = (
+        creator_participant.event_participant_id
+        if creator_participant is not None
+        else (
+            settlement_summary[0]["event_participant_id"]
+            if settlement_summary
+            else None
+        )
+    )
+    integer_summary, integer_settlements = build_integer_settlement_result(
+        settlement_summary,
+        preferred_ep_id=preferred_ep_id,
+    )
+
+    return jsonify({
+        "success": True,
+        "settlements": integer_settlements,
+        "settlement_summary": integer_summary,
+        "participants": [p.to_dict() for p in participants],
+    })
     
 
 @api.route('/api/join', methods=['GET','POST'])
@@ -473,7 +438,7 @@ def api_join_event():
         return jsonify({"success": False, "error": "あなたはすでに参加しています"}), 400
 
 
-    unlinked = Event_Participants.query.filter(
+    joinable_participants = Event_Participants.query.filter(
         Event_Participants.event_id == event.event_id,
         or_(
             Event_Participants.user_id.is_(None),
@@ -484,7 +449,7 @@ def api_join_event():
         ),
     ).all()
 
-    return jsonify({"success": True, "event": event.to_dict(), "unlinked": [ep.to_dict() for ep in unlinked]})
+    return jsonify({"success": True, "event": event.to_dict(), "unlinked": [ep.to_dict() for ep in joinable_participants]})
 
 
 
@@ -497,228 +462,108 @@ def api_join_event_confirm(event_id):
     if user_id is None:
         user_id = guest_create()
 
+    existing_participant = Event_Participants.query.filter_by(
+        event_id=event_id,
+        user_id=user_id,
+    ).first()
+
+    if existing_participant and existing_participant.status == 'joined':
+        return jsonify({"success": False, "error": "あなたはすでに参加しています"}), 400
+
     if selected_ep_id == "new":
         display_name = data.get('display_name')
         if not display_name or not display_name.strip():
             return jsonify({"success": False, "error": "表示名を入力してください"}), 400
-        new_participant = Event_Participants(event_id=event_id, user_id=user_id, display_name=display_name, status='joined')
-        db.session.add(new_participant)
+        if existing_participant and existing_participant.status == 'left':
+            existing_participant.display_name = display_name.strip()
+            existing_participant.status = 'joined'
+            existing_participant.joined_at = datetime.now()
+            existing_participant.left_at = None
+        else:
+            new_participant = Event_Participants(event_id=event_id, user_id=user_id, display_name=display_name, status='joined')
+            db.session.add(new_participant)
 
     else:
         participant = Event_Participants.query.get(selected_ep_id)
-        if participant is None:
+        if (
+            participant is None
+            or participant.event_id != event_id
+            or not (
+                participant.user_id is None
+                or (participant.user_id == user_id and participant.status == 'left')
+            )
+        ):
             return jsonify({"success": False, "error": "参加者の選択が不正です"}), 400
         participant.user_id = user_id
         participant.status = 'joined'
         participant.joined_at = datetime.now()
+        participant.left_at = None
 
     db.session.commit()
     return jsonify({"success": True, "message": "イベントに参加しました"})
 
 
-#ゲスト作成
-def guest_create():
-    session.permanent = True
-    guest_user = Users(user_name="guest_user")
-    db.session.add(guest_user)
-    db.session.flush()
-    user1 = guest_user.user_id
-    session["user_id"] = user1
-    return user1
+def validate_expense_input(data, event, event_id):
+    category_name  = data.get('category_name')
+    expense_amount = data.get('expense_amount')
+    payer_ep_id    = data.get('payer_ep_id')
+    participants_ids = data.get('participants')
+    expense_at     = data.get('expense_at')
+    description    = data.get('description')
+    split_method   = data.get('split_method')
 
-#アクセスチェック(参加者)
-def check_participant(event_id):
-    user_id = session.get("user_id")
-    if not user_id:
-        return None
-    return Event_Participants.query.filter_by(
-        event_id=event_id, user_id=user_id
-    ).filter(Event_Participants.deleted_at.is_(None), Event_Participants.status != 'left').first()
+    if not category_name or not expense_amount or not payer_ep_id or not participants_ids or not expense_at:
+        return None, "入力してください"
 
-#アクセスチェック(作成者)
-def check_creater(event):
-    user_id = session.get("user_id")
-    if not user_id:
-        return False
-    return event.created_by == user_id
+    category_name = category_name.strip()
 
-def allocate_integer_values(values):
-    if not values:
-        return []
+    expense_at, err = parse_date(expense_at)
+    if err:
+        return None, err
 
-    decimals = [Decimal(value) for value in values]
-    floored = [
-        int(value.quantize(Decimal('1'), rounding=ROUND_DOWN))
-        for value in decimals
-    ]
-    target_total = int(
-        sum(decimals, Decimal('0')).quantize(Decimal('1'), rounding=ROUND_HALF_UP)
-    )
-    diff = target_total - sum(floored)
+    expense_amount, err = parse_decimal(expense_amount)
+    if err:
+        return None, err
 
-    if diff:
-        floored[-1] += diff
+    if expense_amount <= 0:
+        return None, "金額が不正です"
 
-    return floored
+    if expense_at > event.end_date:
+        return None, "日付が不正です"
 
-def build_integer_settlement_result(settlement_summary):
-    integer_paid = allocate_integer_values(
-        [item["total_paid"] for item in settlement_summary]
-    )
-    integer_allocations = allocate_integer_values(
-        [item["total_allocations"] for item in settlement_summary]
-    )
+    if not Event_Participants.query.filter_by(event_id=event_id, event_participant_id=payer_ep_id).first():
+        return None, "立替人がイベント参加者ではありません"
 
-    integer_summary = []
-    for item, total_paid, total_allocations in zip(
-        settlement_summary,
-        integer_paid,
-        integer_allocations,
-    ):
-        integer_summary.append({
-            "event_participant_id": item["event_participant_id"],
-            "display_name": item["display_name"],
-            "total_allocations": total_allocations,
-            "total_paid": total_paid,
-            "net": total_paid - total_allocations,
-        })
+    return {
+        'category_name':   category_name,
+        'expense_amount':  expense_amount,
+        'payer_ep_id':     payer_ep_id,
+        'participants_ids': participants_ids,
+        'expense_at':      expense_at,
+        'description':     description,
+        'split_method':    split_method,
+    }, None
 
-    balances = []
-    for item in integer_summary:
-        if item["net"] != 0:
-            balances.append({
-                "ep_id": item["event_participant_id"],
-                "display_name": item["display_name"],
-                "net": item["net"],
-            })
 
-    creditors = []
-    debtors = []
-    for balance in balances:
-        if balance["net"] > 0:
-            creditors.append(balance.copy())
-        else:
-            debtors.append(balance.copy())
+def parse_date(value):
+    try:
+        return datetime.strptime(value, '%Y-%m-%d').date(), None
+    except ValueError:
+        return None, "日付が不正です"
+    
+def parse_decimal(value):
+    try:
+        return Decimal(value), None
+    except InvalidOperation:
+        return None, "金額が不正です"
+    
+def get_create_category(event_id, category_name):
+    category = Expense_Categories.query.filter_by(event_id=event_id, category_name=category_name).one_or_none()
+    if category is None:
+        category = Expense_Categories(category_name=category_name, event_id=event_id)
+        db.session.add(category)
+        db.session.flush()
+    return category
 
-    creditors.sort(key=lambda x: x["net"], reverse=True)
-    debtors.sort(key=lambda x: x["net"])
 
-    integer_settlements = []
-    while creditors and debtors:
-        creditor = creditors[0]
-        debtor = debtors[0]
-        amount = min(creditor["net"], -debtor["net"])
-        integer_settlements.append({
-            "payee_display_name": creditor["display_name"],
-            "payer_display_name": debtor["display_name"],
-            "amount": amount,
-        })
 
-        creditor["net"] -= amount
-        debtor["net"] += amount
-
-        if creditor["net"] == 0:
-            creditors.pop(0)
-        if debtor["net"] == 0:
-            debtors.pop(0)
-
-    return integer_summary, integer_settlements
-
-#割り勘計算
-def create_allocations(expense_id, event_id, expense_amount, split_method, participants_ids, form):
-
-    if split_method == "EQUAL":
-        if not participants_ids:
-            return "負担者を選択してください"
-
-        try:
-            participant_ids = [int(x) for x in participants_ids]
-        except ValueError:
-            return "負担者の指定が不正です"
-
-        if not participant_ids:
-            return "負担者を選択してください"
-
-        raws = Event_Participants.query.with_entities(Event_Participants.event_participant_id).filter_by(event_id=event_id).all()
-        ep_ids = {r.event_participant_id for r in raws}
-
-        invalid_ids = set(participant_ids) - ep_ids
-        if invalid_ids:
-            return "負担者の指定が不正です"
-
-        num_participants = len(participant_ids)
-        base = (expense_amount / num_participants).quantize(Decimal('0.01'), rounding=ROUND_DOWN)
-
-        for i, ep_id in enumerate(participant_ids):
-            if i == num_participants - 1:
-                allocation_amount = expense_amount - base * (num_participants - 1)
-            else:
-                allocation_amount = base
-
-            allocation = Allocations(expense_id=expense_id, event_participant_id=ep_id, weight=1, allocation_amount=allocation_amount)
-            db.session.add(allocation)
-
-    elif split_method == "UNITS":
-        unit_price = form.get('unit_price')
-
-        try:
-            unit_price = unit_price.strip()
-        except AttributeError:
-            return "1口単価が不正です"
-
-        try:
-            unit_price_decimal = Decimal(unit_price)
-        except InvalidOperation:
-            return "1口単価が不正です"
-
-        if unit_price_decimal <= 0:
-            return "1口単価が不正です"
-
-        if not participants_ids:
-            return "負担者を選択してください"
-
-        try:
-            participant_ids = [int(x) for x in participants_ids]
-        except ValueError:
-            return "負担者の指定が不正です"
-
-        units_dict = {}
-
-        for ep_id in participant_ids:
-            key = f"units_{ep_id}"
-            units_raw = str(form.get(key, 0)).strip()
-            try:
-                units = int(units_raw)
-            except ValueError:
-                return "負担者の口数が不正です"
-
-            units_dict[ep_id] = units
-
-        if sum(units_dict.values()) <= 0:
-            return "口数が不正です"
-
-        rows = Event_Participants.query.with_entities(Event_Participants.event_participant_id).filter_by(event_id=event_id).all()
-        ep_ids = {r.event_participant_id for r in rows}
-
-        invalid_ids = set(participant_ids) - ep_ids
-        if invalid_ids:
-            return "負担者の指定が不正です"
-
-        total_amount = unit_price_decimal * sum(units_dict.values())
-        if total_amount != expense_amount:
-            return "合計金額と口数×１口単価の整合性が不正です"
-
-        for ep_id, units in units_dict.items():
-            allocation_amount = (unit_price_decimal * units).quantize(Decimal('0.01'))
-            allocation = Allocations(
-                expense_id=expense_id,
-                event_participant_id=ep_id,
-                weight=units,
-                allocation_amount=allocation_amount
-            )
-            db.session.add(allocation)
-
-    else:
-        return "割り勘方式が不正です"
-
-    return None
