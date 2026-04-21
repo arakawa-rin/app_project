@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
 from datetime import timedelta
@@ -32,6 +32,11 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = IS_PROD
 
 app.register_blueprint(api)
+
+
+@app.route('/healthz')
+def healthcheck():
+    return jsonify({"ok": True}), 200
 
 
 @app.route('/', defaults={'path': ''})
