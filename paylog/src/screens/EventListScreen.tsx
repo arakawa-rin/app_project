@@ -111,7 +111,7 @@ export default function EventListScreen() {
         >
           <MaterialIcons name="flight" size={120} color="#fff" style={styles.heroPlane} />
           <View style={styles.heroNav}>
-            <Text style={[styles.heroNavText, { fontStyle: "italic"}]}>TripSplit</Text>
+            <Text style={[styles.heroNavText, { fontStyle: "italic"}]}>Paylog</Text>
           </View>
           <View style={styles.heroCopy}>
             <Text style={styles.title}>イベント一覧</Text>

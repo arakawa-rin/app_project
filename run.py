@@ -34,11 +34,6 @@ app.config["SESSION_COOKIE_SECURE"] = IS_PROD
 app.register_blueprint(api)
 
 
-@app.route('/healthz')
-def healthcheck():
-    return jsonify({"ok": True}), 200
-
-
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve_spa(path):

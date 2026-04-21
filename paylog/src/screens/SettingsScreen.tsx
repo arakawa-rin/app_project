@@ -60,7 +60,7 @@ export default function SettingsScreen() {
         />
         <View style={styles.heroNav}>
           <Text style={[styles.heroNavText, { fontStyle: "italic" }]}>
-            TripSplit
+            Paylog
           </Text>
         </View>
         <View style={styles.heroCopy}>

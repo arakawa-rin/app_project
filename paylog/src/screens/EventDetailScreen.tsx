@@ -202,7 +202,7 @@ export default function EventDetailScreen() {
           <View style={styles.heroNav}>
             <HeroBackButton onPress={() => navigation.goBack()} />
             <Text style={[styles.heroNavText, { fontStyle: "italic" }]}>
-              TripSplit
+              Paylog
             </Text>
             <Pressable onPress={handleLeave} style={styles.heroNavButton}>
               <MaterialIcons name="exit-to-app" size={30} color="#fff" />

@@ -156,7 +156,7 @@ export default function ExpenseFormScreen({
         <View style={styles.heroNav}>
           <HeroBackButton onPress={onBack} />
           <Text style={[styles.heroNavText, { fontStyle: "italic" }]}>
-            TripSplit
+            Paylog
           </Text>
         </View>
         <Text style={styles.heroTitle}>{screenTitle}</Text>

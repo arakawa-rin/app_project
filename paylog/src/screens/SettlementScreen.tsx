@@ -150,7 +150,7 @@ export default function SettlementScreen() {
         <View style={styles.heroNav}>
           <HeroBackButton onPress={() => navigation.goBack()} />
           <Text style={[styles.heroNavText, { fontStyle: "italic" }]}>
-            TripSplit
+            Paylog
           </Text>
         </View>
         <View style={styles.titleRow}>
