@@ -2,8 +2,11 @@ import { Platform } from 'react-native';
 
 function getBaseUrl() {
   if (Platform.OS === 'web') {
-    if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-      return 'http://localhost:5000';
+    if (typeof window !== 'undefined') {
+      if (window.location.hostname === 'localhost') {
+        return 'http://localhost:5000';
+      }
+      return window.location.origin;
     }
     return '';
   }
